@@ -11,7 +11,7 @@
  * @author  UF Health <webservices@ahc.ufl.edu>
  */
 
-namespace UFHealth\gravity_forms_secure_storage\Uninstall;
+namespace UFHealth\Gravity_Forms_Secure_Storage\Uninstall;
 
 /**
  * Initialize uninstaller

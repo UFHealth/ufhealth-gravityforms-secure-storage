@@ -1,6 +1,6 @@
 <?php
 
-namespace UFHealth\gravity_forms_secure_storage;
+namespace UFHealth\Gravity_Forms_Secure_Storage;
 
 use PHPUnit_Framework_TestResult;
 use WP_Mock;
