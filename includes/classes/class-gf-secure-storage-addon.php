@@ -51,7 +51,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	/**
 	 * @var string Short version of the plugin title to be used on menus and other places where a less verbose string is useful. Example: 'MailChimp'
 	 */
-	protected $_short_title = 'Gravity Forms Secure Storage';
+	protected $_short_title = 'Secure Storage';
 
 	/**
 	 * @var null|mixed The local instance to avoid duplication.
