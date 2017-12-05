@@ -19,37 +19,65 @@ namespace UFHealth\Gravity_Forms_Secure_Storage;
 class GF_Secure_Storage_Addon extends \GFAddOn {
 
 	/**
-	 * @var string Version number of the Add-On
+	 * Version number of the Add-On
+	 *
+	 * @since 1.0
+	 *
+	 * @var string
 	 */
 	protected $_version = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_VERSION;
 
 	/**
-	 * @var string Gravity Forms minimum version requirement
+	 * Gravity Forms minimum version requirement
+	 *
+	 * @since 1.0
+	 *
+	 * @var string
 	 */
 	protected $_min_gravityforms_version = '2.2';
 
 	/**
-	 * @var string URL-friendly identifier used for form settings, add-on settings, text domain localization...
+	 * URL-friendly identifier used for form settings, add-on settings, text domain localization...
+	 *
+	 * @since 1.0
+	 *
+	 * @var string
 	 */
 	protected $_slug = 'ufhealth-gravity-forms-secure-storage';
 
 	/**
-	 * @var string Relative path to the plugin from the plugins folder. Example "gravityforms/gravityforms.php"
+	 * Relative path to the plugin from the plugins folder. Example "gravityforms/gravityforms.php"
+	 *
+	 * @since 1.0
+	 *
+	 * @var string
 	 */
 	protected $_path = 'ufhealth-gravity-forms-secure-storage/ufhealth-gravity-forms-secure-storage.php';
 
 	/**
-	 * @var string Full path the the plugin. Example: __FILE__
+	 * Full path the the plugin. Example: __FILE__
+	 *
+	 * @since 1.0
+	 *
+	 * @var string
 	 */
 	protected $_full_path = __FILE__;
 
 	/**
-	 * @var string Title of the plugin to be used on the settings page, form settings and plugins page. Example: 'Gravity Forms MailChimp Add-On'
+	 * Title of the plugin to be used on the settings page, form settings and plugins page. Example: 'Gravity Forms MailChimp Add-On'
+	 *
+	 * @since 1.0
+	 *
+	 * @var string
 	 */
 	protected $_title = 'UF Health Gravity Forms Secure Storage';
 
 	/**
-	 * @var string Short version of the plugin title to be used on menus and other places where a less verbose string is useful. Example: 'MailChimp'
+	 * Short version of the plugin title to be used on menus and other places where a less verbose string is useful. Example: 'MailChimp'
+	 *
+	 * @since 1.0
+	 *
+	 * @var string
 	 */
 	protected $_short_title = 'Secure Storage';
 
@@ -63,7 +91,11 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	protected $_api_url = 'https://api.e3db.com';
 
 	/**
-	 * @var null|mixed The local instance to avoid duplication.
+	 * The local instance to avoid duplication.
+	 *
+	 * @since 1.0
+	 *
+	 * @var null|mixed
 	 */
 	private static $_instance = null;
 
