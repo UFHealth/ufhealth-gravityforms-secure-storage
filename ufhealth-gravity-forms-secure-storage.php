@@ -33,6 +33,13 @@ function ufhealth_gravity_forms_secure_storage_loader() {
 
 add_action( 'gform_loaded', 'ufhealth_gravity_forms_secure_storage_gf_loader', 5 );
 
+/**
+ * Action gform_loaded
+ *
+ * Handles loading and registering the add-on class
+ *
+ * @since 1.0
+ */
 function ufhealth_gravity_forms_secure_storage_gf_loader() {
 
 	if ( ! method_exists( 'GFForms', 'include_addon_framework' ) ) {
