@@ -108,7 +108,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 */
 	public static function get_instance() {
 
-		if ( self::$_instance == null ) {
+		if ( null === self::$_instance ) {
 			self::$_instance = new GF_Secure_Storage_Addon();
 		}
 
