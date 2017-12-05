@@ -13,7 +13,8 @@
 	],
 	"minimum-stability": "dev",
 	"require":           {
-		"php": ">=7.1"
+		"php": ">=7.1",
+		"tozny/e3db": "dev-master"
 	},
 	"require-dev":       {
 		"phpunit/phpunit":           "6.5.*",
