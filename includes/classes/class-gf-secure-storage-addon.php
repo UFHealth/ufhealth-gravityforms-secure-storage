@@ -26,7 +26,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	/**
 	 * @var string Gravity Forms minimum version requirement
 	 */
-	protected $_min_gravityforms_version = '2.5';
+	protected $_min_gravityforms_version = '2.2';
 
 	/**
 	 * @var string URL-friendly identifier used for form settings, add-on settings, text domain localization...
