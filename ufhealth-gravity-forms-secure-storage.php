@@ -53,9 +53,3 @@ function ufhealth_gravity_forms_secure_storage_gf_loader() {
 	GFAddOn::register( '\UFHealth\Gravity_Forms_Secure_Storage\GF_Secure_Storage_Addon' );
 
 }
-
-function gf_secure_storage_addon() {
-
-	return Gravity_Forms_Secure_Storage\GF_Secure_Storage_Addon::get_instance();
-
-}
