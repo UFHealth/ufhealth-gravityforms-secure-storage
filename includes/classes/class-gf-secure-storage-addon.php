@@ -54,6 +54,15 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	protected $_short_title = 'Secure Storage';
 
 	/**
+	 * The innovault API Url
+	 *
+	 * @since 1.0
+	 *
+	 * @var string
+	 */
+	protected $_api_url = 'https://api.e3db.com';
+
+	/**
 	 * @var null|mixed The local instance to avoid duplication.
 	 */
 	private static $_instance = null;
