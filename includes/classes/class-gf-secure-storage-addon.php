@@ -132,7 +132,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $form
+	 * @param array $form Array of form information.
 	 *
 	 * @return array
 	 */
