@@ -125,6 +125,37 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		parent::init();
 
+		add_action( 'gform_pre_submission', array( $this, 'action_gform_pre_submission' ) );
+
+	}
+
+	/**
+	 * Action gform_pre_submission
+	 *
+	 * Send entry info to Innovault and prevent local save.
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $form The current form.
+	 */
+	public function action_gform_pre_submission( $form ) {
+
+		$settings = $this->get_form_settings( $form );
+
+		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
+
+			$secure_values = array();
+
+			if ( isset( $form['fields'] ) && is_array( $form['fields'] ) ) {
+
+				foreach ( $form['fields'] as $field ) {
+
+					$secure_values[ $field->id ]    = $_POST[ 'input_' . $field->id ];
+					$_POST[ 'input_' . $field->id ] = 'ufh-gf-secured';
+
+				}
+			}
+		}
 	}
 
 	/**
