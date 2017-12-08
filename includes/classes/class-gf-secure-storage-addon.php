@@ -150,7 +150,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 				foreach ( $form['fields'] as $field ) {
 
-					$secure_values[ $field->id ]    = $_POST[ 'input_' . $field->id ];
+					$secure_values[ $field->id ]    = sanitize_text_field( $_POST[ 'input_' . $field->id ] ); // WPCS: input var ok. Sanitization ok.
 					$_POST[ 'input_' . $field->id ] = 'ufh-gf-secured';
 
 				}
