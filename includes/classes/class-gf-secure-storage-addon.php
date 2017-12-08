@@ -13,9 +13,6 @@
 
 namespace UFHealth\Gravity_Forms_Secure_Storage;
 
-use Tozny\E3DB\Exceptions\ConflictException;
-use Tozny\E3DB\Exceptions\NotFoundException;
-
 /**
  * Class GF_Secure_Storage_Addon
  */
@@ -224,6 +221,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
+			// If we haven't already, query Innovault for the entry by id.
 			if ( ! isset( $this->_entries[ $lead['id'] ] ) ) {
 
 				$client = $this->get_client( $form );
@@ -249,6 +247,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 				}
 			}
 
+			// Populate the display value with the value from the secured data.
 			$display_value = $this->_entries[ $lead['id'] ]->data[ $field['id'] ];
 
 		}
@@ -273,6 +272,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
+			// Send the data to Innovault using post_id as an indexable item.
 			$meta_values = array(
 				'post_id' => $entry['id'],
 			);
@@ -280,6 +280,9 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 			$client = $this->get_client( $form );
 
 			$client->write( 'form_submission', $this->_secure_values, $meta_values );
+
+			// Make sure we clean out the secured values locally to prevent it saving anywhere.
+			$this->_secure_values = array();
 
 		}
 	}
@@ -305,6 +308,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 				foreach ( $form['fields'] as $field ) {
 
+					// Save the secured values for later use being careful not to cache them anywhere.
 					$this->_secure_values[ $field->id ] = sanitize_text_field( $_POST[ 'input_' . $field->id ] ); // WPCS: input var ok. Sanitization ok.
 					$_POST[ 'input_' . $field->id ]     = 'ufh-gf-secured';
 
