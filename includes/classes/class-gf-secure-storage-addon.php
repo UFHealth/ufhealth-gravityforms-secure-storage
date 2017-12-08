@@ -112,6 +112,59 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	protected $_secure_record_id;
 
 	/**
+	 * The instance of the Tozny client.
+	 *
+	 * @since 1.0
+	 *
+	 * @var bool|\Tozny\E3DB\Client
+	 */
+	private $_inno_client = false;
+
+	/**
+	 * Retrieve the current instance of the Tozny client.
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $form The current Form object.
+	 *
+	 * @return bool|\Tozny\E3DB\Client
+	 */
+	protected function get_client( $form ) {
+
+		$settings = $this->get_form_settings( $form );
+
+		if ( false === $this->_inno_client ) {
+
+			$config = new \Tozny\E3DB\Config(
+				$settings['secure_client_id'],
+				$settings['secure_api_key_id'],
+				$settings['secure_api_secret'],
+				$settings['secure_api_public_key'],
+				$settings['secure_api_private_key'],
+				$this->_api_url
+			);
+
+			/**
+			 * Pass the configuration to the default coonection handler, which
+			 * uses Guzzle for requests. If you need a different library for
+			 * requests, subclass `\Tozny\E3DB\Connection` and pass an instance
+			 * of your custom implementation to the client instead.
+			 */
+			$connection = new \Tozny\E3DB\Connection\GuzzleConnection( $config );
+
+			/**
+			 * Pass both the configuration and connection handler when building
+			 * a new client instance.
+			 */
+			$this->_inno_client = new \Tozny\E3DB\Client( $config, $connection );
+
+		}
+
+		return $this->_inno_client;
+
+	}
+
+	/**
 	 * Create the local instance if needed.
 	 *
 	 * @since 1.0
@@ -158,28 +211,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-			$config = new \Tozny\E3DB\Config(
-				$settings['secure_client_id'],
-				$settings['secure_api_key_id'],
-				$settings['secure_api_secret'],
-				$settings['secure_api_public_key'],
-				$settings['secure_api_private_key'],
-				$this->_api_url
-			);
-
-			/**
-			 * Pass the configuration to the default coonection handler, which
-			 * uses Guzzle for requests. If you need a different library for
-			 * requests, subclass `\Tozny\E3DB\Connection` and pass an instance
-			 * of your custom implementation to the client instead.
-			 */
-			$connection = new \Tozny\E3DB\Connection\GuzzleConnection( $config );
-
-			/**
-			 * Pass both the configuration and connection handler when building
-			 * a new client instance.
-			 */
-			$client = new \Tozny\E3DB\Client( $config, $connection );
+			$client = $this->get_client( $form );
 
 			try {
 				$record = $client->read( $this->_secure_record_id );
@@ -231,18 +263,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 				}
 			}
 
-			$config = new \Tozny\E3DB\Config(
-				$settings['secure_client_id'],
-				$settings['secure_api_key_id'],
-				$settings['secure_api_secret'],
-				$settings['secure_api_public_key'],
-				$settings['secure_api_private_key'],
-				$this->_api_url
-			);
-
-			$connection = new \Tozny\E3DB\Connection\GuzzleConnection( $config );
-
-			$client = new \Tozny\E3DB\Client( $config, $connection );
+			$client = $this->get_client( $form );
 
 			$record = $client->write( 'form_submission', $secure_values );
 
