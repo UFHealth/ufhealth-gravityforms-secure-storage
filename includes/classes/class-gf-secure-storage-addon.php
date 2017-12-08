@@ -100,6 +100,15 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	private static $_instance = null;
 
 	/**
+	 * The record ID from the Tozny server
+	 *
+	 * @since 1.0
+	 *
+	 * @var string
+	 */
+	protected $_secure_record_id;
+
+	/**
 	 * Create the local instance if needed.
 	 *
 	 * @since 1.0
@@ -155,6 +164,34 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 				}
 			}
+
+			$config = new \Tozny\E3DB\Config(
+				$settings['secure_client_id'],
+				$settings['secure_api_key_id'],
+				$settings['secure_api_secret'],
+				$settings['secure_api_public_key'],
+				$settings['secure_api_private_key'],
+				$this->_api_url
+			);
+
+			/**
+			 * Pass the configuration to the default coonection handler, which
+			 * uses Guzzle for requests. If you need a different library for
+			 * requests, subclass `\Tozny\E3DB\Connection` and pass an instance
+			 * of your custom implementation to the client instead.
+			 */
+			$connection = new \Tozny\E3DB\Connection\GuzzleConnection( $config );
+
+			/**
+			 * Pass both the configuration and connection handler when building
+			 * a new client instance.
+			 */
+			$client = new \Tozny\E3DB\Client( $config, $connection );
+
+			$record = $client->write( 'form_submission', $secure_values );
+
+			$this->_secure_record_id = $record->meta->record_id;
+
 		}
 	}
 
