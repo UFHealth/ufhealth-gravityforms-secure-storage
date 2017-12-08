@@ -199,6 +199,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		parent::init();
 
 		add_action( 'gform_after_submission', array( $this, 'action_gform_after_submission' ), 10, 2 );
+		add_action( 'gform_delete_entries', array( $this, 'action_gform_delete_entries' ), 10, 2 );
 		add_action( 'gform_delete_lead', array( $this, 'action_gform_delete_lead' ) );
 		add_action( 'gform_pre_submission', array( $this, 'action_gform_pre_submission' ) );
 
@@ -206,6 +207,76 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 	}
 
+	/**
+	 * Action gform_delete_entries
+	 *
+	 * Delete secured info during bulk deletion of entries.
+	 *
+	 * @since 1.0
+	 *
+	 * @param int    $form_id The ID of the current form.
+	 * @param string $status  The status we're deleting (such as during empty trash).
+	 */
+	public function action_gform_delete_entries( $form_id, $status ) {
+
+		global $wpdb;
+
+		$lead_table    = \GFFormsModel::get_lead_table_name();
+		$status_filter = empty( $status ) ? '' : $wpdb->prepare( 'AND status=%s', $status );
+
+		// Get the entries.
+		$sql     = $wpdb->prepare( "SELECT * FROM $lead_table WHERE form_id=%d {$status_filter}", $form_id );
+		$results = $wpdb->get_results( $sql );
+
+		if ( is_array( $results ) && ! empty( $results ) ) {
+
+			$form = \GFAPI::get_form( $form_id );
+
+			$client = $this->get_client( $form );
+
+			foreach ( $results as $result ) {
+
+				$query = array(
+					'eq' =>
+						array(
+							'name'  => 'post_id',
+							'value' => $result->id,
+						),
+				);
+
+				$data   = true;
+				$raw    = false;
+				$writer = null;
+				$record = null;
+				$type   = null;
+
+				$results = $client->query( $data, $raw, $writer, $record, $type, $query );
+
+				foreach ( $results as $record ) {
+
+					try {
+
+						$client->delete( $record->meta->record_id );
+
+					} catch ( ConflictException $e ) {
+
+						return;
+
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Action gform_delete_lead
+	 *
+	 * Delete secured info from individual entries.
+	 *
+	 * @since 1.0
+	 *
+	 * @param int $entry_id The id of the entry we're deleting from.
+	 */
 	public function action_gform_delete_lead( $entry_id ) {
 
 		$entry = \GFAPI::get_entry( $entry_id );
