@@ -190,8 +190,8 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		parent::init();
 
-		add_action( 'gform_pre_submission', array( $this, 'action_gform_pre_submission' ) );
 		add_action( 'gform_after_submission', array( $this, 'action_gform_after_submission' ), 10, 2 );
+		add_action( 'gform_pre_submission', array( $this, 'action_gform_pre_submission' ) );
 
 	}
 
