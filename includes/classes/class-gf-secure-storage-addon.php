@@ -13,6 +13,9 @@
 
 namespace UFHealth\Gravity_Forms_Secure_Storage;
 
+use Tozny\E3DB\Exceptions\ConflictException;
+use Tozny\E3DB\Exceptions\NotFoundException;
+
 /**
  * Class GF_Secure_Storage_Addon
  */
@@ -135,7 +138,70 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		parent::init();
 
 		add_action( 'gform_pre_submission', array( $this, 'action_gform_pre_submission' ) );
+		add_action( 'gform_after_submission', array( $this, 'action_gform_after_submission' ), 10, 2 );
 
+	}
+
+	/**
+	 * Action gform_after_submission
+	 *
+	 * Add the entry id to the secure data after it is available.
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $entry An array of the saved entry information.
+	 * @param array $form  An array of the saved form information.
+	 */
+	public function action_gform_after_submission( $entry, $form ) {
+
+		$settings = $this->get_form_settings( $form );
+
+		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
+
+			$config = new \Tozny\E3DB\Config(
+				$settings['secure_client_id'],
+				$settings['secure_api_key_id'],
+				$settings['secure_api_secret'],
+				$settings['secure_api_public_key'],
+				$settings['secure_api_private_key'],
+				$this->_api_url
+			);
+
+			/**
+			 * Pass the configuration to the default coonection handler, which
+			 * uses Guzzle for requests. If you need a different library for
+			 * requests, subclass `\Tozny\E3DB\Connection` and pass an instance
+			 * of your custom implementation to the client instead.
+			 */
+			$connection = new \Tozny\E3DB\Connection\GuzzleConnection( $config );
+
+			/**
+			 * Pass both the configuration and connection handler when building
+			 * a new client instance.
+			 */
+			$client = new \Tozny\E3DB\Client( $config, $connection );
+
+			try {
+				$record = $client->read( $this->_secure_record_id );
+
+			} catch ( NotFoundException $e ) {
+
+				return;
+
+			}
+
+			$record->data['id'] = $entry['id'];
+
+			try {
+
+				$client->update( $record );
+
+			} catch ( ConflictException $e ) {
+
+				return;
+
+			}
+		}
 	}
 
 	/**
@@ -174,18 +240,8 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 				$this->_api_url
 			);
 
-			/**
-			 * Pass the configuration to the default coonection handler, which
-			 * uses Guzzle for requests. If you need a different library for
-			 * requests, subclass `\Tozny\E3DB\Connection` and pass an instance
-			 * of your custom implementation to the client instead.
-			 */
 			$connection = new \Tozny\E3DB\Connection\GuzzleConnection( $config );
 
-			/**
-			 * Pass both the configuration and connection handler when building
-			 * a new client instance.
-			 */
 			$client = new \Tozny\E3DB\Client( $config, $connection );
 
 			$record = $client->write( 'form_submission', $secure_values );
