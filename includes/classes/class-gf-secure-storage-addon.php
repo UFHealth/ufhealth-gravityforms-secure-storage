@@ -103,13 +103,13 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	private static $_instance = null;
 
 	/**
-	 * The record ID from the Tozny server
+	 * The values we need to secure
 	 *
 	 * @since 1.0
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected $_secure_record_id;
+	protected $_secure_values;
 
 	/**
 	 * The instance of the Tozny client.
@@ -119,6 +119,15 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 * @var bool|\Tozny\E3DB\Client
 	 */
 	private $_inno_client = false;
+
+	/**
+	 * Array of retrieved entries for display. Used to reduce API calls.
+	 *
+	 * @since 1.0
+	 *
+	 * @var array
+	 */
+	private $_entries = array();
 
 	/**
 	 * Retrieve the current instance of the Tozny client.
@@ -193,6 +202,59 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		add_action( 'gform_after_submission', array( $this, 'action_gform_after_submission' ), 10, 2 );
 		add_action( 'gform_pre_submission', array( $this, 'action_gform_pre_submission' ) );
 
+		add_filter( 'gform_entry_field_value', array( $this, 'filter_gform_entry_field_value' ), 10, 4 );
+
+	}
+
+	/**
+	 * Filters a field value displayed within an entry.
+	 *
+	 * @since 1.5
+	 *
+	 * @param string    $display_value The value to be displayed.
+	 * @param \GF_Field $field         The Field Object.
+	 * @param array     $lead          The Entry Object.
+	 * @param array     $form          The Form Object.
+	 *
+	 * @return string
+	 */
+	public function filter_gform_entry_field_value( $display_value, $field, $lead, $form ) {
+
+		$settings = $this->get_form_settings( $form );
+
+		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
+
+			if ( ! isset( $this->_entries[ $lead['id'] ] ) ) {
+
+				$client = $this->get_client( $form );
+
+				$query = array(
+					'eq' =>
+						array(
+							'name'  => 'post_id',
+							'value' => $lead['id'],
+						),
+				);
+
+				$data   = true;
+				$raw    = false;
+				$writer = null;
+				$record = null;
+				$type   = null;
+
+				$results = $client->query( $data, $raw, $writer, $record, $type, $query );
+
+				foreach ( $results as $record ) {
+					$this->_entries[ $lead['id'] ] = $record;
+				}
+			}
+
+			$display_value = $this->_entries[ $lead['id'] ]->data[ $field['id'] ];
+
+		}
+
+		return $display_value;
+
 	}
 
 	/**
@@ -211,28 +273,14 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
+			$meta_values = array(
+				'post_id' => $entry['id'],
+			);
+
 			$client = $this->get_client( $form );
 
-			try {
-				$record = $client->read( $this->_secure_record_id );
+			$client->write( 'form_submission', $this->_secure_values, $meta_values );
 
-			} catch ( NotFoundException $e ) {
-
-				return;
-
-			}
-
-			$record->data['id'] = $entry['id'];
-
-			try {
-
-				$client->update( $record );
-
-			} catch ( ConflictException $e ) {
-
-				return;
-
-			}
 		}
 	}
 
@@ -251,24 +299,17 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-			$secure_values = array();
+			$this->_secure_values = array();
 
 			if ( isset( $form['fields'] ) && is_array( $form['fields'] ) ) {
 
 				foreach ( $form['fields'] as $field ) {
 
-					$secure_values[ $field->id ]    = sanitize_text_field( $_POST[ 'input_' . $field->id ] ); // WPCS: input var ok. Sanitization ok.
-					$_POST[ 'input_' . $field->id ] = 'ufh-gf-secured';
+					$this->_secure_values[ $field->id ] = sanitize_text_field( $_POST[ 'input_' . $field->id ] ); // WPCS: input var ok. Sanitization ok.
+					$_POST[ 'input_' . $field->id ]     = 'ufh-gf-secured';
 
 				}
 			}
-
-			$client = $this->get_client( $form );
-
-			$record = $client->write( 'form_submission', $secure_values );
-
-			$this->_secure_record_id = $record->meta->record_id;
-
 		}
 	}
 
