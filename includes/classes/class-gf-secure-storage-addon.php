@@ -263,7 +263,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 				}
 			}
 
-			$client = $this->get_client( $form );
+			$client = $this->get_client( $form );   
 
 			$record = $client->write( 'form_submission', $secure_values );
 
