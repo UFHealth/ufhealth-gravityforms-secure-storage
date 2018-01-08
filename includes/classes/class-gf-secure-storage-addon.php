@@ -13,6 +13,9 @@
 
 namespace UFHealth\Gravity_Forms_Secure_Storage;
 
+use Tozny\E3DB\Client;
+use Tozny\E3DB\Config;
+use Tozny\E3DB\Connection\GuzzleConnection;
 use Tozny\E3DB\Exceptions\ConflictException;
 
 /**
@@ -143,7 +146,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		if ( false === $this->_inno_client ) {
 
-			$config = new \Tozny\E3DB\Config(
+			$config = new Config(
 				$settings['secure_client_id'],
 				$settings['secure_api_key_id'],
 				$settings['secure_api_secret'],
@@ -158,13 +161,13 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 			 * requests, subclass `\Tozny\E3DB\Connection` and pass an instance
 			 * of your custom implementation to the client instead.
 			 */
-			$connection = new \Tozny\E3DB\Connection\GuzzleConnection( $config );
+			$connection = new GuzzleConnection( $config );
 
 			/**
 			 * Pass both the configuration and connection handler when building
 			 * a new client instance.
 			 */
-			$this->_inno_client = new \Tozny\E3DB\Client( $config, $connection );
+			$this->_inno_client = new Client( $config, $connection );
 
 		}
 
@@ -226,7 +229,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		// Get the entries.
 		$sql     = $wpdb->prepare( "SELECT * FROM $lead_table WHERE form_id=%d {$status_filter}", $form_id );
-		$results = $wpdb->get_results( $sql );
+		$results = $wpdb->get_results( $sql ); // WPCS: db call ok.
 
 		if ( is_array( $results ) && ! empty( $results ) ) {
 
