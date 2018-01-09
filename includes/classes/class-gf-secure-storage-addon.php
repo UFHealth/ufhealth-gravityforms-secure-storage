@@ -433,6 +433,25 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 						$this->_secure_values[ $field->id ] = sanitize_text_field( $_POST[ 'input_' . $field->id ] ); // WPCS: input var ok. Sanitization ok.
 						$_POST[ 'input_' . $field->id ]     = 'ufh-gf-secured';
 
+					} else {
+
+						$field_input = array();
+
+						foreach ( $field->inputs as $input ) {
+
+							$input_id = str_replace( '.', '_', $input['id'] );
+
+							if ( isset( $_POST[ 'input_' . $input_id ] ) ) {
+
+								$field_input[ $input['id'] ] = sanitize_text_field( $_POST[ 'input_' . $input_id ] ); // WPCS: input var ok. Sanitization ok.
+
+								$_POST[ 'input_' . $input_id ] = 'ufh-gf-secured';
+
+							}
+						}
+
+						$this->_secure_values[ $field->id ] = wp_json_encode( $field_input );
+
 					}
 				}
 			}
