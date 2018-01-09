@@ -428,9 +428,12 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 				foreach ( $form['fields'] as $field ) {
 
 					// Save the secured values for later use being careful not to cache them anywhere.
-					$this->_secure_values[ $field->id ] = sanitize_text_field( $_POST[ 'input_' . $field->id ] ); // WPCS: input var ok. Sanitization ok.
-					$_POST[ 'input_' . $field->id ]     = 'ufh-gf-secured';
+					if ( null === $field->inputs ) {
 
+						$this->_secure_values[ $field->id ] = sanitize_text_field( $_POST[ 'input_' . $field->id ] ); // WPCS: input var ok. Sanitization ok.
+						$_POST[ 'input_' . $field->id ]     = 'ufh-gf-secured';
+
+					}
 				}
 			}
 		}
