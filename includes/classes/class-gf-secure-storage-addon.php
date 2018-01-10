@@ -367,8 +367,24 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 			}
 
 			// Populate the display value with the value from the secured data.
-			$display_value = $this->_entries[ $lead['id'] ]->data[ $field['id'] ];
+			if ( is_array( $field['inputs'] ) ) {
 
+				$display_value = '';
+
+				foreach ( $field['inputs'] as $input ) {
+
+					if ( isset( $this->_entries[ $lead['id'] ]->data[ $input['id'] ] ) ) {
+						$display_value .= ' ' . $this->_entries[ $lead['id'] ]->data[ $input['id'] ];
+					}
+
+					$display_value = trim( $display_value );
+
+				}
+			} else {
+
+				$display_value = $this->_entries[ $lead['id'] ]->data[ $field['id'] ];
+
+			}
 		}
 
 		return $display_value;
