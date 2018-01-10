@@ -207,7 +207,21 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		add_action( 'gform_pre_submission', array( $this, 'action_gform_pre_submission' ) );
 
 		add_filter( 'gform_entry_field_value', array( $this, 'filter_gform_entry_field_value' ), 10, 4 );
+		add_filter( 'gform_get_field_value', array( $this, 'filter_gform_get_field_value' ), 10, 3 );
 		add_filter( 'gform_notification', array( $this, 'filter_gform_notification' ), 10, 3 );
+
+	}
+
+	/**
+	 * Filter gform_get_field_value
+	 *
+	 * Restore secure values to lead.
+	 *
+	 * @since 1.0
+	 */
+	public function filter_gform_get_field_value( $value, $lead, $field ) {
+
+		return $value;
 
 	}
 
@@ -482,8 +496,8 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 * @since 1.0
 	 *
 	 * @param array $notification An array of properties which make up a notification object. See Notifications Object for possible properties.
-	 * @param array $form The form object for which the notification is being sent.
-	 * @param array $entry The form object for which the notification is being sent.
+	 * @param array $form         The form object for which the notification is being sent.
+	 * @param array $entry        The form object for which the notification is being sent.
 	 *
 	 * @return array The filtered notification
 	 */
