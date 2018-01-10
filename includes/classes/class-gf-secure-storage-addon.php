@@ -207,6 +207,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		add_action( 'gform_pre_submission', array( $this, 'action_gform_pre_submission' ) );
 
 		add_filter( 'gform_entry_field_value', array( $this, 'filter_gform_entry_field_value' ), 10, 4 );
+		add_filter( 'gform_notification', array( $this, 'filter_gform_notification' ), 10, 3 );
 
 	}
 
@@ -471,6 +472,25 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Filter gform_notification
+	 *
+	 * Re-apply field information to valid notifications.
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $notification An array of properties which make up a notification object. See Notifications Object for possible properties.
+	 * @param array $form The form object for which the notification is being sent.
+	 * @param array $entry The form object for which the notification is being sent.
+	 *
+	 * @return array The filtered notification
+	 */
+	public function filter_gform_notification( $notification, $form, $entry ) {
+
+		return $notification;
+
 	}
 
 	/**
