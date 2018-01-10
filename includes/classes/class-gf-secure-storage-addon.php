@@ -221,6 +221,55 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 */
 	public function filter_gform_get_field_value( $value, $lead, $field ) {
 
+		$form     = \GFAPI::get_form( $field['formId'] );
+		$settings = $this->get_form_settings( $form );
+
+		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
+
+			// If we haven't already, query Innovault for the entry by id.
+			if ( ! isset( $this->_entries[ $lead['id'] ] ) ) {
+
+				$client = $this->get_client( $form );
+
+				$query = array(
+					'eq' =>
+						array(
+							'name'  => 'post_id',
+							'value' => $lead['id'],
+						),
+				);
+
+				$data   = true;
+				$raw    = false;
+				$writer = null;
+				$record = null;
+				$type   = null;
+
+				$results = $client->query( $data, $raw, $writer, $record, $type, $query );
+
+				foreach ( $results as $record ) {
+					$this->_entries[ $lead['id'] ] = $record;
+				}
+			}
+
+			$stop = 1;
+
+			// Populate the display value with the value from the secured data.
+			if ( is_array( $field['inputs'] ) ) {
+
+				foreach ( $field['inputs'] as $input ) {
+
+					if ( isset( $this->_entries[ $lead['id'] ]->data[ $input['id'] ] ) ) {
+						$value[ $input['id'] ] = $this->_entries[ $lead['id'] ]->data[ $input['id'] ];
+					}
+				}
+			} else {
+
+				$value = $this->_entries[ $lead['id'] ]->data[ $lead['id'] ];
+
+			}
+		}
+
 		return $value;
 
 	}
