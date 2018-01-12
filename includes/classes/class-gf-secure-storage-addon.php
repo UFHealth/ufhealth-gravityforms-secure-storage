@@ -160,7 +160,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 *
 	 * @return bool|\Tozny\E3DB\Client
 	 */
-	protected function get_client( $form ) {
+	protected function set_client( $form ) {
 
 		$settings = $this->get_form_settings( $form );
 
@@ -216,7 +216,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 				'post_id' => $entry['id'],
 			);
 
-			$client = $this->get_client( $form );
+			$client = $this->set_client( $form );
 
 			$client->write( 'form_submission', $this->_secure_values, $meta_values );
 
@@ -251,7 +251,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			$form = \GFAPI::get_form( $form_id );
 
-			$client = $this->get_client( $form );
+			$client = $this->set_client( $form );
 
 			foreach ( $results as $result ) {
 
@@ -305,7 +305,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-			$client = $this->get_client( $form );
+			$client = $this->set_client( $form );
 
 			$query = array(
 				'eq' =>
@@ -410,7 +410,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 			// If we haven't already, query Innovault for the entry by id.
 			if ( ! isset( $this->_entries[ $lead['id'] ] ) ) {
 
-				$client = $this->get_client( $form );
+				$client = $this->set_client( $form );
 
 				$query = array(
 					'eq' =>
@@ -475,7 +475,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 			// If we haven't already, query Innovault for the entry by id.
 			if ( ! isset( $this->_entries[ $lead['id'] ] ) ) {
 
-				$client = $this->get_client( $form );
+				$client = $this->set_client( $form );
 
 				$query = array(
 					'eq' =>
