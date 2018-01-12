@@ -504,8 +504,6 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 				}
 			}
 
-			$stop = 1;
-
 			// Populate the display value with the value from the secured data.
 			if ( is_array( $field['inputs'] ) ) {
 
