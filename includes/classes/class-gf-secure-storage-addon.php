@@ -428,7 +428,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 				$results = $client->query( $data, $raw, $writer, $record, $type, $query );
 
 				foreach ( $results as $record ) {
-					$this->_entries[ $lead['id'] ] = $record;
+					$this->_entries[ $lead['id'] ] = $record->data;
 				}
 			}
 
@@ -439,8 +439,8 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 				foreach ( $field['inputs'] as $input ) {
 
-					if ( isset( $this->_entries[ $lead['id'] ]->data[ $input['id'] ] ) ) {
-						$display_value .= ' ' . $this->_entries[ $lead['id'] ]->data[ $input['id'] ];
+					if ( isset( $this->_entries[ $lead['id'] ][ $input['id'] ] ) ) {
+						$display_value .= ' ' . $this->_entries[ $lead['id'] ][ $input['id'] ];
 					}
 
 					$display_value = trim( $display_value );
@@ -448,7 +448,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 				}
 			} else {
 
-				$display_value = $this->_entries[ $lead['id'] ]->data[ $field['id'] ];
+				$display_value = $this->_entries[ $lead['id'] ][ $field['id'] ];
 
 			}
 		}
@@ -474,26 +474,33 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 			// If we haven't already, query Innovault for the entry by id.
 			if ( ! isset( $this->_entries[ $lead['id'] ] ) ) {
 
-				$client = $this->set_client( $form );
+				if ( is_array( $this->_secure_values ) && ! empty( $this->_secure_values ) ) {
 
-				$query = array(
-					'eq' =>
-						array(
-							'name'  => 'post_id',
-							'value' => $lead['id'],
-						),
-				);
+					$this->_entries[ $lead['id'] ] = $this->_secure_values;
 
-				$data   = true;
-				$raw    = false;
-				$writer = null;
-				$record = null;
-				$type   = null;
+				} else {
 
-				$results = $client->query( $data, $raw, $writer, $record, $type, $query );
+					$client = $this->set_client( $form );
 
-				foreach ( $results as $record ) {
-					$this->_entries[ $lead['id'] ] = $record;
+					$query = array(
+						'eq' =>
+							array(
+								'name'  => 'post_id',
+								'value' => $lead['id'],
+							),
+					);
+
+					$data   = true;
+					$raw    = false;
+					$writer = null;
+					$record = null;
+					$type   = null;
+
+					$results = $client->query( $data, $raw, $writer, $record, $type, $query );
+
+					foreach ( $results as $record ) {
+						$this->_entries[ $lead['id'] ] = $record->data;
+					}
 				}
 			}
 
@@ -504,13 +511,20 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 				foreach ( $field['inputs'] as $input ) {
 
-					if ( isset( $this->_entries[ $lead['id'] ]->data[ $input['id'] ] ) ) {
-						$value[ $input['id'] ] = $this->_entries[ $lead['id'] ]->data[ $input['id'] ];
+					if ( isset( $this->_entries[ $lead['id'] ][ $input['id'] ] ) ) {
+						$value[ $input['id'] ] = $this->_entries[ $lead['id'] ][ $input['id'] ];
+					}
+				}
+
+				foreach ( $value as $index => $item ) {
+
+					if ( 'ufh-gf-secured' === $item ) {
+						unset ( $value[ $index ] );
 					}
 				}
 			} else {
 
-				$value = $this->_entries[ $lead['id'] ]->data[ $lead['id'] ];
+				$value = $this->_entries[ $lead['id'] ][ $field['id'] ];
 
 			}
 		}
