@@ -510,7 +510,14 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 				foreach ( $field['inputs'] as $input ) {
 
 					if ( isset( $this->_entries[ $lead['id'] ][ $input['id'] ] ) ) {
-						$value = $this->_entries[ $lead['id'] ][ $input['id'] ];
+						$value[ $input['id'] ] = $this->_entries[ $lead['id'] ][ $input['id'] ];
+					}
+				}
+
+				foreach ( $value as $index => $item ) {
+
+					if ( 'ufh-gf-secured' === $item ) {
+						$value[ $index ] = '';
 					}
 				}
 			} else {
