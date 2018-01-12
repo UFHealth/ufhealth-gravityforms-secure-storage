@@ -552,7 +552,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		return array(
 			array(
-				'title'  => esc_html__( 'Secure Storage Settings', 'simpleaddon' ),
+				'title'  => esc_html__( 'Secure Storage Settings', 'ufhealth-gravity-forms-secure-storage' ),
 				'fields' => array(
 					array(
 						'label'   => esc_html__( 'Enable Secure Storage', 'ufhealth-gravity-forms-secure-storage' ),
