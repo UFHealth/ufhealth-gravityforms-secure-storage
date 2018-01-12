@@ -376,11 +376,11 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 							$post_id      = 'input_' . $field->id . '_' . $field_sub_id;
 
 							if ( isset( $_POST[ $post_id ] ) ) { // WPCS: CSRF ok.
+
 								$this->_secure_values[ $field->id . '.' . $field_sub_id ] = sanitize_text_field( $_POST[ $post_id ] ); // WPCS: input var ok. Sanitization ok.
+								$_POST[ $post_id ]                                        = 'ufh-gf-secured/' . $field->id . '.' . $field_sub_id;
+
 							}
-
-							$_POST[ $post_id ] = 'ufh-gf-secured/' . $field->id . '.' . $field_sub_id;
-
 						}
 					}
 				}
