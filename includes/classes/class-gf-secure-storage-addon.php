@@ -24,78 +24,6 @@ use Tozny\E3DB\Exceptions\ConflictException;
 class GF_Secure_Storage_Addon extends \GFAddOn {
 
 	/**
-	 * Version number of the Add-On
-	 *
-	 * @since 1.0
-	 *
-	 * @var string
-	 */
-	protected $_version = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_VERSION;
-
-	/**
-	 * Gravity Forms minimum version requirement
-	 *
-	 * @since 1.0
-	 *
-	 * @var string
-	 */
-	protected $_min_gravityforms_version = '2.2';
-
-	/**
-	 * URL-friendly identifier used for form settings, add-on settings, text domain localization...
-	 *
-	 * @since 1.0
-	 *
-	 * @var string
-	 */
-	protected $_slug = 'ufhealth-gravity-forms-secure-storage';
-
-	/**
-	 * Relative path to the plugin from the plugins folder. Example "gravityforms/gravityforms.php"
-	 *
-	 * @since 1.0
-	 *
-	 * @var string
-	 */
-	protected $_path = 'ufhealth-gravity-forms-secure-storage/ufhealth-gravity-forms-secure-storage.php';
-
-	/**
-	 * Full path the the plugin. Example: __FILE__
-	 *
-	 * @since 1.0
-	 *
-	 * @var string
-	 */
-	protected $_full_path = __FILE__;
-
-	/**
-	 * Title of the plugin to be used on the settings page, form settings and plugins page. Example: 'Gravity Forms MailChimp Add-On'
-	 *
-	 * @since 1.0
-	 *
-	 * @var string
-	 */
-	protected $_title = 'UF Health Gravity Forms Secure Storage';
-
-	/**
-	 * Short version of the plugin title to be used on menus and other places where a less verbose string is useful. Example: 'MailChimp'
-	 *
-	 * @since 1.0
-	 *
-	 * @var string
-	 */
-	protected $_short_title = 'Secure Storage';
-
-	/**
-	 * The innovault API Url
-	 *
-	 * @since 1.0
-	 *
-	 * @var string
-	 */
-	protected $_api_url = 'https://api.e3db.com';
-
-	/**
 	 * The local instance to avoid duplication.
 	 *
 	 * @since 1.0
@@ -105,13 +33,13 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	private static $_instance = null;
 
 	/**
-	 * The values we need to secure
+	 * Array of retrieved entries for display. Used to reduce API calls.
 	 *
 	 * @since 1.0
 	 *
 	 * @var array
 	 */
-	protected $_secure_values;
+	private $_entries = array();
 
 	/**
 	 * The instance of the Tozny client.
@@ -123,13 +51,105 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	private $_inno_client = false;
 
 	/**
-	 * Array of retrieved entries for display. Used to reduce API calls.
+	 * The innovault API Url
+	 *
+	 * @since 1.0
+	 *
+	 * @var string
+	 */
+	protected $_api_url = 'https://api.e3db.com';
+
+	/**
+	 * Full path the the plugin. Example: __FILE__
+	 *
+	 * @since 1.0
+	 *
+	 * @var string
+	 */
+	protected $_full_path = __FILE__;
+
+	/**
+	 * Gravity Forms minimum version requirement
+	 *
+	 * @since 1.0
+	 *
+	 * @var string
+	 */
+	protected $_min_gravityforms_version = '2.2';
+
+	/**
+	 * Relative path to the plugin from the plugins folder. Example "gravityforms/gravityforms.php"
+	 *
+	 * @since 1.0
+	 *
+	 * @var string
+	 */
+	protected $_path = 'ufhealth-gravity-forms-secure-storage/ufhealth-gravity-forms-secure-storage.php';
+
+	/**
+	 * The values we need to secure
 	 *
 	 * @since 1.0
 	 *
 	 * @var array
 	 */
-	private $_entries = array();
+	protected $_secure_values;
+
+	/**
+	 * Short version of the plugin title to be used on menus and other places where a less verbose string is useful. Example: 'MailChimp'
+	 *
+	 * @since 1.0
+	 *
+	 * @var string
+	 */
+	protected $_short_title = 'Secure Storage';
+
+	/**
+	 * URL-friendly identifier used for form settings, add-on settings, text domain localization...
+	 *
+	 * @since 1.0
+	 *
+	 * @var string
+	 */
+	protected $_slug = 'ufhealth-gravity-forms-secure-storage';
+
+	/**
+	 * Title of the plugin to be used on the settings page, form settings and plugins page. Example: 'Gravity Forms MailChimp Add-On'
+	 *
+	 * @since 1.0
+	 *
+	 * @var string
+	 */
+	protected $_title = 'UF Health Gravity Forms Secure Storage';
+
+	/**
+	 * Version number of the Add-On
+	 *
+	 * @since 1.0
+	 *
+	 * @var string
+	 */
+	protected $_version = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_VERSION;
+
+	/**
+	 * Plugin starting point. Handles hooks and loading of language files.
+	 *
+	 * @since 1.0
+	 */
+	public function init() {
+
+		parent::init();
+
+		add_action( 'gform_after_submission', array( $this, 'action_gform_after_submission' ), 10, 2 );
+		add_action( 'gform_delete_entries', array( $this, 'action_gform_delete_entries' ), 10, 2 );
+		add_action( 'gform_delete_lead', array( $this, 'action_gform_delete_lead' ) );
+		add_action( 'gform_pre_submission', array( $this, 'action_gform_pre_submission' ) );
+
+		add_filter( 'gform_entry_field_value', array( $this, 'filter_gform_entry_field_value' ), 10, 4 );
+		add_filter( 'gform_get_field_value', array( $this, 'filter_gform_get_field_value' ), 10, 3 );
+		add_filter( 'gform_notification', array( $this, 'filter_gform_notification' ), 10, 3 );
+
+	}
 
 	/**
 	 * Retrieve the current instance of the Tozny client.
@@ -176,102 +196,34 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	}
 
 	/**
-	 * Create the local instance if needed.
+	 * Action gform_after_submission
+	 *
+	 * Add the entry id to the secure data after it is available.
 	 *
 	 * @since 1.0
 	 *
-	 * @return mixed|null|\UFHealth\Gravity_Forms_Secure_Storage\GF_Secure_Storage_Addon
+	 * @param array $entry An array of the saved entry information.
+	 * @param array $form  An array of the saved form information.
 	 */
-	public static function get_instance() {
+	public function action_gform_after_submission( $entry, $form ) {
 
-		if ( null === self::$_instance ) {
-			self::$_instance = new GF_Secure_Storage_Addon();
-		}
-
-		return self::$_instance;
-
-	}
-
-	/**
-	 * Plugin starting point. Handles hooks and loading of language files.
-	 *
-	 * @since 1.0
-	 */
-	public function init() {
-
-		parent::init();
-
-		add_action( 'gform_after_submission', array( $this, 'action_gform_after_submission' ), 10, 2 );
-		add_action( 'gform_delete_entries', array( $this, 'action_gform_delete_entries' ), 10, 2 );
-		add_action( 'gform_delete_lead', array( $this, 'action_gform_delete_lead' ) );
-		add_action( 'gform_pre_submission', array( $this, 'action_gform_pre_submission' ) );
-
-		add_filter( 'gform_entry_field_value', array( $this, 'filter_gform_entry_field_value' ), 10, 4 );
-		add_filter( 'gform_get_field_value', array( $this, 'filter_gform_get_field_value' ), 10, 3 );
-		add_filter( 'gform_notification', array( $this, 'filter_gform_notification' ), 10, 3 );
-
-	}
-
-	/**
-	 * Filter gform_get_field_value
-	 *
-	 * Restore secure values to lead.
-	 *
-	 * @since 1.0
-	 */
-	public function filter_gform_get_field_value( $value, $lead, $field ) {
-
-		$form     = \GFAPI::get_form( $field['formId'] );
 		$settings = $this->get_form_settings( $form );
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-			// If we haven't already, query Innovault for the entry by id.
-			if ( ! isset( $this->_entries[ $lead['id'] ] ) ) {
+			// Send the data to Innovault using post_id as an indexable item.
+			$meta_values = array(
+				'post_id' => $entry['id'],
+			);
 
-				$client = $this->get_client( $form );
+			$client = $this->get_client( $form );
 
-				$query = array(
-					'eq' =>
-						array(
-							'name'  => 'post_id',
-							'value' => $lead['id'],
-						),
-				);
+			$client->write( 'form_submission', $this->_secure_values, $meta_values );
 
-				$data   = true;
-				$raw    = false;
-				$writer = null;
-				$record = null;
-				$type   = null;
+			// Make sure we clean out the secured values locally to prevent it saving anywhere.
+			$this->_secure_values = array();
 
-				$results = $client->query( $data, $raw, $writer, $record, $type, $query );
-
-				foreach ( $results as $record ) {
-					$this->_entries[ $lead['id'] ] = $record;
-				}
-			}
-
-			$stop = 1;
-
-			// Populate the display value with the value from the secured data.
-			if ( is_array( $field['inputs'] ) ) {
-
-				foreach ( $field['inputs'] as $input ) {
-
-					if ( isset( $this->_entries[ $lead['id'] ]->data[ $input['id'] ] ) ) {
-						$value[ $input['id'] ] = $this->_entries[ $lead['id'] ]->data[ $input['id'] ];
-					}
-				}
-			} else {
-
-				$value = $this->_entries[ $lead['id'] ]->data[ $lead['id'] ];
-
-			}
 		}
-
-		return $value;
-
 	}
 
 	/**
@@ -387,6 +339,57 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	}
 
 	/**
+	 * Action gform_pre_submission
+	 *
+	 * Send entry info to Innovault and prevent local save.
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $form The current form.
+	 */
+	public function action_gform_pre_submission( $form ) {
+
+		$settings = $this->get_form_settings( $form );
+
+		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
+
+			$this->_secure_values = array();
+
+			if ( isset( $form['fields'] ) && is_array( $form['fields'] ) ) {
+
+				foreach ( $form['fields'] as $field ) {
+
+					// Save the secured values for later use being careful not to cache them anywhere.
+					if ( null === $field->inputs ) {
+
+						if ( isset( $_POST[ 'input_' . $field->id ] ) ) { // WPCS: CSRF ok.
+							$this->_secure_values[ $field->id ] = sanitize_text_field( $_POST[ 'input_' . $field->id ] ); // WPCS: input var ok. Sanitization ok.
+						}
+
+						$_POST[ 'input_' . $field->id ] = 'ufh-gf-secured';
+
+					} else {
+
+						foreach ( $field->inputs as $input ) {
+
+							$input_id     = explode( '.', $input['id'] );
+							$field_sub_id = $input_id[1];
+							$post_id      = 'input_' . $field->id . '_' . $field_sub_id;
+
+							if ( isset( $_POST[ $post_id ] ) ) { // WPCS: CSRF ok.
+								$this->_secure_values[ $field->id . '.' . $field_sub_id ] = sanitize_text_field( $_POST[ $post_id ] ); // WPCS: input var ok. Sanitization ok.
+							}
+
+							$_POST[ $post_id ] = 'ufh-gf-secured';
+
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * Filters a field value displayed within an entry.
 	 *
 	 * @since 1.5
@@ -456,85 +459,65 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	}
 
 	/**
-	 * Action gform_after_submission
+	 * Filter gform_get_field_value
 	 *
-	 * Add the entry id to the secure data after it is available.
+	 * Restore secure values to lead.
 	 *
 	 * @since 1.0
-	 *
-	 * @param array $entry An array of the saved entry information.
-	 * @param array $form  An array of the saved form information.
 	 */
-	public function action_gform_after_submission( $entry, $form ) {
+	public function filter_gform_get_field_value( $value, $lead, $field ) {
 
+		$form     = \GFAPI::get_form( $field['formId'] );
 		$settings = $this->get_form_settings( $form );
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-			// Send the data to Innovault using post_id as an indexable item.
-			$meta_values = array(
-				'post_id' => $entry['id'],
-			);
+			// If we haven't already, query Innovault for the entry by id.
+			if ( ! isset( $this->_entries[ $lead['id'] ] ) ) {
 
-			$client = $this->get_client( $form );
+				$client = $this->get_client( $form );
 
-			$client->write( 'form_submission', $this->_secure_values, $meta_values );
+				$query = array(
+					'eq' =>
+						array(
+							'name'  => 'post_id',
+							'value' => $lead['id'],
+						),
+				);
 
-			// Make sure we clean out the secured values locally to prevent it saving anywhere.
-			$this->_secure_values = array();
+				$data   = true;
+				$raw    = false;
+				$writer = null;
+				$record = null;
+				$type   = null;
 
-		}
-	}
+				$results = $client->query( $data, $raw, $writer, $record, $type, $query );
 
-	/**
-	 * Action gform_pre_submission
-	 *
-	 * Send entry info to Innovault and prevent local save.
-	 *
-	 * @since 1.0
-	 *
-	 * @param array $form The current form.
-	 */
-	public function action_gform_pre_submission( $form ) {
-
-		$settings = $this->get_form_settings( $form );
-
-		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
-
-			$this->_secure_values = array();
-
-			if ( isset( $form['fields'] ) && is_array( $form['fields'] ) ) {
-
-				foreach ( $form['fields'] as $field ) {
-
-					// Save the secured values for later use being careful not to cache them anywhere.
-					if ( null === $field->inputs ) {
-
-						if ( isset( $_POST[ 'input_' . $field->id ] ) ) { // WPCS: CSRF ok.
-							$this->_secure_values[ $field->id ] = sanitize_text_field( $_POST[ 'input_' . $field->id ] ); // WPCS: input var ok. Sanitization ok.
-						}
-
-						$_POST[ 'input_' . $field->id ] = 'ufh-gf-secured';
-
-					} else {
-
-						foreach ( $field->inputs as $input ) {
-
-							$input_id     = explode( '.', $input['id'] );
-							$field_sub_id = $input_id[1];
-							$post_id      = 'input_' . $field->id . '_' . $field_sub_id;
-
-							if ( isset( $_POST[ $post_id ] ) ) { // WPCS: CSRF ok.
-								$this->_secure_values[ $field->id . '.' . $field_sub_id ] = sanitize_text_field( $_POST[ $post_id ] ); // WPCS: input var ok. Sanitization ok.
-							}
-
-							$_POST[ $post_id ] = 'ufh-gf-secured';
-
-						}
-					}
+				foreach ( $results as $record ) {
+					$this->_entries[ $lead['id'] ] = $record;
 				}
 			}
+
+			$stop = 1;
+
+			// Populate the display value with the value from the secured data.
+			if ( is_array( $field['inputs'] ) ) {
+
+				foreach ( $field['inputs'] as $input ) {
+
+					if ( isset( $this->_entries[ $lead['id'] ]->data[ $input['id'] ] ) ) {
+						$value[ $input['id'] ] = $this->_entries[ $lead['id'] ]->data[ $input['id'] ];
+					}
+				}
+			} else {
+
+				$value = $this->_entries[ $lead['id'] ]->data[ $lead['id'] ];
+
+			}
 		}
+
+		return $value;
+
 	}
 
 	/**
@@ -626,6 +609,23 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 				),
 			),
 		);
+	}
+
+	/**
+	 * Create the local instance if needed.
+	 *
+	 * @since 1.0
+	 *
+	 * @return mixed|null|\UFHealth\Gravity_Forms_Secure_Storage\GF_Secure_Storage_Addon
+	 */
+	public static function get_instance() {
+
+		if ( null === self::$_instance ) {
+			self::$_instance = new GF_Secure_Storage_Addon();
+		}
+
+		return self::$_instance;
+
 	}
 
 	/**
