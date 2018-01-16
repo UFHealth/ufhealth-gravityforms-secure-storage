@@ -148,6 +148,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			try {
 
+				$this->_data_connector->init( $settings );
 				$this->_data_connector->add_record( $this->_secure_values, $entry['id'] );
 
 				// Make sure we clean out the secured values locally to prevent it saving anywhere.
