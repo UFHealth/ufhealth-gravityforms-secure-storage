@@ -178,18 +178,19 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-			// Send the data to Innovault using post_id as an indexable item.
-			$meta_values = array(
-				'post_id' => $entry['id'],
-			);
+			try {
 
-			$client = $this->set_client( $form );
+				$this->_data_connector->add_record( $this->_secure_values, $entry['id'] );
 
-			$client->write( 'form_submission', $this->_secure_values, $meta_values );
+				// Make sure we clean out the secured values locally to prevent it saving anywhere.
+				$this->_secure_values = array();
 
-			// Make sure we clean out the secured values locally to prevent it saving anywhere.
-			$this->_secure_values = array();
+			} catch ( \Exception $e ) {
 
+				// @todo This should stop everything as this could be really bad for regulatory compliance.
+				return;
+
+			}
 		}
 	}
 
