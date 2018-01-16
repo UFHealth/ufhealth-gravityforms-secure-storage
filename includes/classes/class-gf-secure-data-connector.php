@@ -18,6 +18,10 @@ namespace UFHealth\Gravity_Forms_Secure_Storage;
  */
 class GF_Secure_Data_Connector {
 
+	public function add_record() {
+
+	}
+
 	/**
 	 * Returns the settings fields needed to configure the secure form.
 	 *
@@ -89,6 +93,14 @@ class GF_Secure_Data_Connector {
 
 	}
 
+	public function delete_record( $lead_id ) {
+
+	}
+
+	public function get_record() {
+
+	}
+
 	/**
 	 * Retrieve the current instance of the Tozny client.
 	 *
@@ -130,6 +142,10 @@ class GF_Secure_Data_Connector {
 		}
 
 		return $this->_inno_client;
+
+	}
+
+	public function update_record() {
 
 	}
 }
