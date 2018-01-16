@@ -15,6 +15,9 @@
 
 define( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_VERSION', '1.0' );
 define( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_URL', plugin_dir_url( __FILE__ ) );
+define( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_INCLUDES', trailingslashit( plugin_dir_path( __FILE__ ) ) . 'includes/' );
+
+require trailingslashit( plugin_dir_path( __FILE__ ) ) . 'vendor/autoload.php';
 
 add_action( 'plugins_loaded', 'ufhealth_gravity_forms_secure_storage_loader' );
 
@@ -25,5 +28,28 @@ function ufhealth_gravity_forms_secure_storage_loader() {
 
 	// Remember the text domain.
 	load_plugin_textdomain( 'ufhealth-gravity-forms-secure-storage', false, dirname( dirname( __FILE__ ) ) . '/languages' );
+
+}
+
+add_action( 'gform_loaded', 'ufhealth_gravity_forms_secure_storage_gf_loader', 5 );
+
+/**
+ * Action gform_loaded
+ *
+ * Handles loading and registering the add-on class
+ *
+ * @since 1.0
+ */
+function ufhealth_gravity_forms_secure_storage_gf_loader() {
+
+	if ( ! method_exists( 'GFForms', 'include_addon_framework' ) ) {
+		return;
+	}
+
+	GFForms::include_addon_framework();
+
+	require_once UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_INCLUDES . 'classes/class-gf-secure-storage-addon.php';
+
+	GFAddOn::register( '\UFHealth\Gravity_Forms_Secure_Storage\GF_Secure_Storage_Addon' );
 
 }

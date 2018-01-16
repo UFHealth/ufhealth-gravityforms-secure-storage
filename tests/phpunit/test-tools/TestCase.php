@@ -1,14 +1,14 @@
 <?php
 
-namespace UFHealth\gravity_forms_secure_storage;
+namespace UFHealth\Gravity_Forms_Secure_Storage;
 
 use PHPUnit_Framework_TestResult;
 use WP_Mock;
 use WP_Mock\Tools\TestCase as BaseTestCase;
 
-class TestCase extends BaseTestCase {
+class TestCase extends \WP_Mock\Tools\TestCase {
 
-	public function run( PHPUnit_Framework_TestResult $result = null ) {
+	public function run( \PHPUnit\Framework\TestResult $result = null ) {
 
 		$this->setPreserveGlobalState( false );
 
