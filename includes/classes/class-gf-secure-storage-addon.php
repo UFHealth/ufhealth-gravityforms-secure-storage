@@ -515,10 +515,13 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 							$value[ $input['id'] ] = $this->_entries[ $lead['id'] ][ $input['id'] ];
 
-						} else {
+						} else { // Complex fields display differently depending on which view so we have to set the right value by using the saved ID.
 
-							$value = $this->_entries[ $lead['id'] ][ $input['id'] ];
+							$id_array = explode( '/', $value );
 
+							if ( isset( $id_array[1] ) && $input['id'] === $id_array[1] ) {
+								$value = $this->_entries[ $lead['id'] ][ $input['id'] ];
+							}
 						}
 					}
 				}
