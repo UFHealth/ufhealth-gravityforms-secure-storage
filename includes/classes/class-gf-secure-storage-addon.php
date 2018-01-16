@@ -195,6 +195,8 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			if ( is_array( $results ) && ! empty( $results ) ) {
 
+				$this->_data_connector->init( $settings );
+
 				foreach ( $results as $result ) {
 
 					try {
@@ -232,6 +234,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			try {
 
+				$this->_data_connector->init( $settings );
 				$this->_data_connector->delete_record( $entry_id );
 
 			} catch ( \Exception $e ) {
@@ -314,6 +317,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			try {
 
+				$this->_data_connector->init( $settings );
 				$record = $this->_data_connector->get_record( $lead['id'] );
 
 			} catch ( \Exception $e ) {
@@ -370,6 +374,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 				try {
 
+					$this->_data_connector->init( $settings );
 					$record = $this->_data_connector->get_record( $lead['id'] );
 
 				} catch ( \Exception $e ) {
@@ -451,6 +456,10 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		}
 
 		return self::$_instance;
+
+	}
+
+	protected function init_connector( $form_settings ) {
 
 	}
 

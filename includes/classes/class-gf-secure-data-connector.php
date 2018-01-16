@@ -80,19 +80,6 @@ class GF_Secure_Data_Connector {
 			'post_id' => absint( $post_id ),
 		);
 
-		if ( false === $this->_inno_client ) {
-
-			try {
-
-				$this->set_client();
-
-			} catch ( \Exception $e ) {
-
-				throw $e;
-
-			}
-		}
-
 		$this->_inno_client->write( 'form_submission', $secure_values, $meta_values );
 
 	}
@@ -203,19 +190,6 @@ class GF_Secure_Data_Connector {
 
 			try {
 
-				if ( false === $this->_inno_client ) {
-
-					try {
-
-						$this->set_client();
-
-					} catch ( \Exception $e ) {
-
-						throw $e;
-
-					}
-				}
-
 				$this->_inno_client->delete( $record->meta->record_id );
 
 			} catch ( ConflictException $e ) {
@@ -277,10 +251,35 @@ class GF_Secure_Data_Connector {
 	 * @since 1.0
 	 *
 	 * @param array $form_settings The settings for the current form.
+	 *
+	 * @throws \Exception Throws an exception if connector hasn't been properly initialized.
+	 *
+	 * @return bool True on success or false.
 	 */
 	public function init( $form_settings ) {
 
-		$this->settings = $form_settings;
+		if ( false === $this->settings ) {
+
+			$this->settings = $form_settings;
+
+			if ( false === $this->_inno_client ) {
+
+				try {
+
+					$this->set_client();
+
+				} catch ( \Exception $e ) {
+
+					throw $e;
+
+				}
+			}
+
+			return true;
+
+		}
+
+		return false;
 
 	}
 
