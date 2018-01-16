@@ -32,6 +32,15 @@ class GF_Secure_Data_Connector {
 	 */
 	protected $_api_url = 'https://api.e3db.com';
 
+	/**
+	 * Array of retrieved entries for display. Used to reduce API calls.
+	 *
+	 * @since 1.0
+	 *
+	 * @var array
+	 */
+	private $_entries = array();
+
 	protected $form = false;
 
 	protected $settings = false;
@@ -213,7 +222,47 @@ class GF_Secure_Data_Connector {
 
 	}
 
+	/**
+	 * Retrieve secure record data from data store.
+	 *
+	 * @since 1.0
+	 *
+	 * @param int $lead_id The id of the record to retrieve.
+	 *
+	 * @throws \Exception Throws an exception if connector hasn't been properly initialized.
+	 *
+	 * @return array Array of secure data.
+	 */
 	public function get_record( $lead_id ) {
+
+		if ( false === $this->settings ) {
+			throw new \Exception( esc_html__( 'Data connector must be initialized before attempting to access', 'ufhealth-gravity-forms-secure-storage' ) );
+		}
+
+		if ( ! isset( $this->_entries[ $lead_id ] ) ) {
+
+			$query = array(
+				'eq' =>
+					array(
+						'name'  => 'post_id',
+						'value' => $lead_id,
+					),
+			);
+
+			$data   = true;
+			$raw    = false;
+			$writer = null;
+			$record = null;
+			$type   = null;
+
+			$results = $this->_inno_client->query( $data, $raw, $writer, $record, $type, $query );
+
+			foreach ( $results as $record ) {
+				$this->_entries[ $lead_id ] = $record->data;
+			}
+		}
+
+		return $this->_entries[ $lead_id ];
 
 	}
 

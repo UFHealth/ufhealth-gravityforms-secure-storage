@@ -33,33 +33,6 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	private static $_instance = null;
 
 	/**
-	 * Array of retrieved entries for display. Used to reduce API calls.
-	 *
-	 * @since 1.0
-	 *
-	 * @var array
-	 */
-	private $_entries = array();
-
-	/**
-	 * The instance of the Tozny client.
-	 *
-	 * @since 1.0
-	 *
-	 * @var bool|\Tozny\E3DB\Client
-	 */
-	private $_inno_client = false;
-
-	/**
-	 * The innovault API Url
-	 *
-	 * @since 1.0
-	 *
-	 * @var string
-	 */
-	protected $_api_url = 'https://api.e3db.com';
-
-	/**
 	 * The connector to the secure data store
 	 *
 	 * @since 1.0
@@ -339,30 +312,15 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-			// If we haven't already, query Innovault for the entry by id.
-			if ( ! isset( $this->_entries[ $lead['id'] ] ) ) {
+			try {
 
-				$client = $this->set_client( $form );
+				$record = $this->_data_connector->get_record( $lead['id'] );
 
-				$query = array(
-					'eq' =>
-						array(
-							'name'  => 'post_id',
-							'value' => $lead['id'],
-						),
-				);
+			} catch ( \Exception $e ) {
 
-				$data   = true;
-				$raw    = false;
-				$writer = null;
-				$record = null;
-				$type   = null;
+				// @todo This should stop everything as this could be really bad for regulatory compliance.
+				return $display_value;
 
-				$results = $client->query( $data, $raw, $writer, $record, $type, $query );
-
-				foreach ( $results as $record ) {
-					$this->_entries[ $lead['id'] ] = $record->data;
-				}
 			}
 
 			// Populate the display value with the value from the secured data.
@@ -372,8 +330,8 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 				foreach ( $field['inputs'] as $input ) {
 
-					if ( isset( $this->_entries[ $lead['id'] ][ $input['id'] ] ) ) {
-						$display_value .= ' ' . $this->_entries[ $lead['id'] ][ $input['id'] ];
+					if ( isset( $record[ $input['id'] ] ) ) {
+						$display_value .= ' ' . $record[ $input['id'] ];
 					}
 
 					$display_value = trim( $display_value );
@@ -381,7 +339,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 				}
 			} else {
 
-				$display_value = $this->_entries[ $lead['id'] ][ $field['id'] ];
+				$display_value = $record[ $field['id'] ];
 
 			}
 		}
@@ -404,36 +362,21 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-			// If we haven't already, query Innovault for the entry by id.
-			if ( ! isset( $this->_entries[ $lead['id'] ] ) ) {
+			if ( is_array( $this->_secure_values ) && ! empty( $this->_secure_values ) ) {
 
-				if ( is_array( $this->_secure_values ) && ! empty( $this->_secure_values ) ) {
+				$record = $this->_secure_values;
 
-					$this->_entries[ $lead['id'] ] = $this->_secure_values;
+			} else {
 
-				} else {
+				try {
 
-					$client = $this->set_client( $form );
+					$record = $this->_data_connector->get_record( $lead['id'] );
 
-					$query = array(
-						'eq' =>
-							array(
-								'name'  => 'post_id',
-								'value' => $lead['id'],
-							),
-					);
+				} catch ( \Exception $e ) {
 
-					$data   = true;
-					$raw    = false;
-					$writer = null;
-					$record = null;
-					$type   = null;
+					// @todo This should stop everything as this could be really bad for regulatory compliance.
+					return $value;
 
-					$results = $client->query( $data, $raw, $writer, $record, $type, $query );
-
-					foreach ( $results as $record ) {
-						$this->_entries[ $lead['id'] ] = $record->data;
-					}
 				}
 			}
 
@@ -442,18 +385,18 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 				foreach ( $field['inputs'] as $input ) {
 
-					if ( isset( $this->_entries[ $lead['id'] ][ $input['id'] ] ) ) {
+					if ( isset( $record[ $input['id'] ] ) ) {
 
 						if ( is_array( $value ) ) {
 
-							$value[ $input['id'] ] = $this->_entries[ $lead['id'] ][ $input['id'] ];
+							$value[ $input['id'] ] = $record[ $input['id'] ];
 
 						} else { // Complex fields display differently depending on which view so we have to set the right value by using the saved ID.
 
 							$id_array = explode( '/', $value );
 
 							if ( isset( $id_array[1] ) && $input['id'] === $id_array[1] ) {
-								$value = $this->_entries[ $lead['id'] ][ $input['id'] ];
+								$value = $record[ $input['id'] ];
 							}
 						}
 					}
@@ -470,7 +413,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 				}
 			} else {
 
-				$value = $this->_entries[ $lead['id'] ][ $field['id'] ];
+				$value = $record[ $field['id'] ];
 
 			}
 		}
