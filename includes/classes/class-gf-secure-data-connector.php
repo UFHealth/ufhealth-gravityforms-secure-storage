@@ -23,9 +23,18 @@ use Tozny\E3DB\Exceptions\ConflictException;
  */
 class GF_Secure_Data_Connector {
 
-	protected $form;
+	/**
+	 * The innovault API Url
+	 *
+	 * @since 1.0
+	 *
+	 * @var string
+	 */
+	protected $_api_url = 'https://api.e3db.com';
 
-	protected $settings;
+	protected $form = false;
+
+	protected $settings = false;
 
 	/**
 	 * The instance of the Tozny client.
@@ -36,7 +45,7 @@ class GF_Secure_Data_Connector {
 	 */
 	protected $_inno_client = false;
 
-	public function add_record( $form ) {
+	public function add_record() {
 
 	}
 
@@ -111,7 +120,16 @@ class GF_Secure_Data_Connector {
 
 	}
 
-	public function delete_record( $lead_id, $form ) {
+	/**
+	 * Delete a record from secure storage.
+	 *
+	 * @since 1.0
+	 *
+	 * @param int $lead_id The id of the lead to delete from secure storage.
+	 *
+	 * @throws \Exception Throws an exception if connector hasn't been properly initialized.
+	 */
+	public function delete_record( $lead_id ) {
 
 		$query = array(
 			'eq' =>
@@ -134,7 +152,16 @@ class GF_Secure_Data_Connector {
 			try {
 
 				if ( false === $this->_inno_client ) {
-					$this->set_client();
+
+					try {
+
+						$this->set_client();
+
+					} catch ( \Exception $e ) {
+
+						throw $e;
+
+					}
 				}
 
 				$this->_inno_client->delete( $record->meta->record_id );
@@ -148,7 +175,22 @@ class GF_Secure_Data_Connector {
 
 	}
 
-	public function get_record( $lead_id, $form ) {
+	public function get_record( $lead_id ) {
+
+	}
+
+	/**
+	 * Setup information for the current form.
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $form          The current gravity form.
+	 * @param array $form_settings The settings for the current form.
+	 */
+	public function init( $form, $form_settings ) {
+
+		$this->form     = $form;
+		$this->settings = $form_settings;
 
 	}
 
@@ -157,27 +199,29 @@ class GF_Secure_Data_Connector {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array $form The current Form object.
+	 * @throws \Exception Throws an exception if connector hasn't been properly initialized.
 	 *
 	 * @return bool|\Tozny\E3DB\Client
 	 */
-	protected function set_client( $form = null ) {
+	protected function set_client() {
 
-		$settings = $this->get_form_settings( $form );
+		if ( false === $this->form ) {
+			throw new \Exception( esc_html__( 'Data connector must be initialized before attempting to access', 'ufhealth-gravity-forms-secure-storage' ) );
+		}
 
 		if ( false === $this->_inno_client ) {
 
 			$config = new Config(
-				$settings['secure_client_id'],
-				$settings['secure_api_key_id'],
-				$settings['secure_api_secret'],
-				$settings['secure_api_public_key'],
-				$settings['secure_api_private_key'],
+				$this->settings['secure_client_id'],
+				$this->settings['secure_api_key_id'],
+				$this->settings['secure_api_secret'],
+				$this->settings['secure_api_public_key'],
+				$this->settings['secure_api_private_key'],
 				$this->_api_url
 			);
 
 			/**
-			 * Pass the configuration to the default coonection handler, which
+			 * Pass the configuration to the default connection handler, which
 			 * uses Guzzle for requests. If you need a different library for
 			 * requests, subclass `\Tozny\E3DB\Connection` and pass an instance
 			 * of your custom implementation to the client instead.
@@ -196,7 +240,7 @@ class GF_Secure_Data_Connector {
 
 	}
 
-	public function update_record( $lead_id, $form ) {
+	public function update_record( $lead_id ) {
 
 	}
 }
