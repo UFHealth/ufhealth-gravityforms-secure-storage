@@ -13,6 +13,11 @@
 
 namespace UFHealth\Gravity_Forms_Secure_Storage;
 
+use Tozny\E3DB\Client;
+use Tozny\E3DB\Config;
+use Tozny\E3DB\Connection\GuzzleConnection;
+use Tozny\E3DB\Exceptions\ConflictException;
+
 /**
  * Class GF_Secure_Data_Connector
  */
@@ -20,13 +25,18 @@ class GF_Secure_Data_Connector {
 
 	protected $form;
 
-	protected $client = false;
+	protected $settings;
 
-	public function __construct() {
-		
-	}
+	/**
+	 * The instance of the Tozny client.
+	 *
+	 * @since 1.0
+	 *
+	 * @var bool|\Tozny\E3DB\Client
+	 */
+	protected $_inno_client = false;
 
-	public function add_record() {
+	public function add_record( $form ) {
 
 	}
 
@@ -101,7 +111,7 @@ class GF_Secure_Data_Connector {
 
 	}
 
-	public function delete_record( $lead_id ) {
+	public function delete_record( $lead_id, $form ) {
 
 		$query = array(
 			'eq' =>
@@ -117,17 +127,17 @@ class GF_Secure_Data_Connector {
 		$record = null;
 		$type   = null;
 
-		$results = $this->client->query( $data, $raw, $writer, $record, $type, $query );
+		$results = $this->_inno_client->query( $data, $raw, $writer, $record, $type, $query );
 
 		foreach ( $results as $record ) {
 
 			try {
 
-				if ( false === $this->client) {
+				if ( false === $this->_inno_client ) {
 					$this->set_client();
 				}
 
-				$client->delete( $record->meta->record_id );
+				$this->_inno_client->delete( $record->meta->record_id );
 
 			} catch ( ConflictException $e ) {
 
@@ -138,7 +148,7 @@ class GF_Secure_Data_Connector {
 
 	}
 
-	public function get_record() {
+	public function get_record( $lead_id, $form ) {
 
 	}
 
@@ -151,7 +161,7 @@ class GF_Secure_Data_Connector {
 	 *
 	 * @return bool|\Tozny\E3DB\Client
 	 */
-	protected function set_client( $form ) {
+	protected function set_client( $form = null ) {
 
 		$settings = $this->get_form_settings( $form );
 
@@ -186,7 +196,7 @@ class GF_Secure_Data_Connector {
 
 	}
 
-	public function update_record() {
+	public function update_record( $lead_id, $form ) {
 
 	}
 }
