@@ -88,4 +88,48 @@ class GF_Secure_Data_Connector {
 		);
 
 	}
+
+	/**
+	 * Retrieve the current instance of the Tozny client.
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $form The current Form object.
+	 *
+	 * @return bool|\Tozny\E3DB\Client
+	 */
+	protected function set_client( $form ) {
+
+		$settings = $this->get_form_settings( $form );
+
+		if ( false === $this->_inno_client ) {
+
+			$config = new Config(
+				$settings['secure_client_id'],
+				$settings['secure_api_key_id'],
+				$settings['secure_api_secret'],
+				$settings['secure_api_public_key'],
+				$settings['secure_api_private_key'],
+				$this->_api_url
+			);
+
+			/**
+			 * Pass the configuration to the default coonection handler, which
+			 * uses Guzzle for requests. If you need a different library for
+			 * requests, subclass `\Tozny\E3DB\Connection` and pass an instance
+			 * of your custom implementation to the client instead.
+			 */
+			$connection = new GuzzleConnection( $config );
+
+			/**
+			 * Pass both the configuration and connection handler when building
+			 * a new client instance.
+			 */
+			$this->_inno_client = new Client( $config, $connection );
+
+		}
+
+		return $this->_inno_client;
+
+	}
 }
