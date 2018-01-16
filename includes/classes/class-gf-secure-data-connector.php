@@ -210,7 +210,7 @@ class GF_Secure_Data_Connector {
 	 *
 	 * @throws \Exception Throws an exception if connector hasn't been properly initialized.
 	 *
-	 * @return array Array of secure data.
+	 * @return array|bool Array of secure data or False on failure.
 	 */
 	public function get_record( $lead_id ) {
 
@@ -241,7 +241,11 @@ class GF_Secure_Data_Connector {
 			}
 		}
 
-		return $this->_entries[ $lead_id ];
+		if ( isset( $this->_entries[ $lead_id ] ) ) {
+			return $this->_entries[ $lead_id ];
+		}
+
+		return false;
 
 	}
 

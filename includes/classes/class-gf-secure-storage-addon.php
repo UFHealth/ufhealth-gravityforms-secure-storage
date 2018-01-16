@@ -195,7 +195,16 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			if ( is_array( $results ) && ! empty( $results ) ) {
 
-				$this->_data_connector->init( $settings );
+				try {
+
+					$this->_data_connector->init( $settings );
+
+				} catch ( \Exception $e ) {
+
+					// @todo This should stop everything as this could be really bad for regulatory compliance.
+					return;
+
+				}
 
 				foreach ( $results as $result ) {
 
