@@ -13,11 +13,6 @@
 
 namespace UFHealth\Gravity_Forms_Secure_Storage;
 
-use Tozny\E3DB\Client;
-use Tozny\E3DB\Config;
-use Tozny\E3DB\Connection\GuzzleConnection;
-use Tozny\E3DB\Exceptions\ConflictException;
-
 /**
  * Class GF_Secure_Storage_Addon
  */
