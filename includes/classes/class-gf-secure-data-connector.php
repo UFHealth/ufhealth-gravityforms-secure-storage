@@ -77,7 +77,7 @@ class GF_Secure_Data_Connector {
 
 		// Send the data to Innovault using post_id as an indexable item.
 		$meta_values = array(
-			'post_id' => absint( $post_id ),
+			'post_id' => $post_id,
 		);
 
 		$this->_inno_client->write( 'form_submission', $secure_values, $meta_values );
