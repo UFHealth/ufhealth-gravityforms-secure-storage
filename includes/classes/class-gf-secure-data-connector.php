@@ -205,7 +205,7 @@ class GF_Secure_Data_Connector {
 	 */
 	protected function set_client() {
 
-		if ( false === $this->form ) {
+		if ( false === $this->settings ) {
 			throw new \Exception( esc_html__( 'Data connector must be initialized before attempting to access', 'ufhealth-gravity-forms-secure-storage' ) );
 		}
 
