@@ -224,34 +224,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			foreach ( $results as $result ) {
 
-				$query = array(
-					'eq' =>
-						array(
-							'name'  => 'post_id',
-							'value' => $result->id,
-						),
-				);
 
-				$data   = true;
-				$raw    = false;
-				$writer = null;
-				$record = null;
-				$type   = null;
-
-				$results = $client->query( $data, $raw, $writer, $record, $type, $query );
-
-				foreach ( $results as $record ) {
-
-					try {
-
-						$client->delete( $record->meta->record_id );
-
-					} catch ( ConflictException $e ) {
-
-						return;
-
-					}
-				}
 			}
 		}
 	}

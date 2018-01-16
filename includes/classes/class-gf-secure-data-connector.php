@@ -95,6 +95,39 @@ class GF_Secure_Data_Connector {
 
 	public function delete_record( $lead_id ) {
 
+		$query = array(
+			'eq' =>
+				array(
+					'name'  => 'post_id',
+					'value' => $lead_id,
+				),
+		);
+
+		$data   = true;
+		$raw    = false;
+		$writer = null;
+		$record = null;
+		$type   = null;
+
+		$results = $this->client->query( $data, $raw, $writer, $record, $type, $query );
+
+		foreach ( $results as $record ) {
+
+			try {
+
+				if ( false === $this->client) {
+					$this->set_client();
+				}
+
+				$client->delete( $record->meta->record_id );
+
+			} catch ( ConflictException $e ) {
+
+				return;
+
+			}
+		}
+
 	}
 
 	public function get_record() {
