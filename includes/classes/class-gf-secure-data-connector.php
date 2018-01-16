@@ -66,14 +66,8 @@ class GF_Secure_Data_Connector {
 	 *
 	 * @param array $secure_values Array of secure values.
 	 * @param int   $post_id       The post ID to index the secure values.
-	 *
-	 * @throws \Exception Throws an exception if connector hasn't been properly initialized.
 	 */
 	public function add_record( $secure_values, $post_id ) {
-
-		if ( false === $this->settings ) {
-			throw new \Exception( esc_html__( 'Data connector must be initialized before attempting to access', 'ufhealth-gravity-forms-secure-storage' ) );
-		}
 
 		// Send the data to Innovault using post_id as an indexable item.
 		$meta_values = array(
@@ -161,14 +155,8 @@ class GF_Secure_Data_Connector {
 	 * @since 1.0
 	 *
 	 * @param int $lead_id The id of the lead to delete from secure storage.
-	 *
-	 * @throws \Exception Throws an exception if connector hasn't been properly initialized.
 	 */
 	public function delete_record( $lead_id ) {
-
-		if ( false === $this->settings ) {
-			throw new \Exception( esc_html__( 'Data connector must be initialized before attempting to access', 'ufhealth-gravity-forms-secure-storage' ) );
-		}
 
 		$query = array(
 			'eq' =>
@@ -208,15 +196,9 @@ class GF_Secure_Data_Connector {
 	 *
 	 * @param int $lead_id The id of the record to retrieve.
 	 *
-	 * @throws \Exception Throws an exception if connector hasn't been properly initialized.
-	 *
 	 * @return array|bool Array of secure data or False on failure.
 	 */
 	public function get_record( $lead_id ) {
-
-		if ( false === $this->settings ) {
-			throw new \Exception( esc_html__( 'Data connector must be initialized before attempting to access', 'ufhealth-gravity-forms-secure-storage' ) );
-		}
 
 		if ( ! isset( $this->_entries[ $lead_id ] ) ) {
 
