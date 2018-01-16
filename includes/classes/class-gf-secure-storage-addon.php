@@ -60,6 +60,15 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	protected $_api_url = 'https://api.e3db.com';
 
 	/**
+	 * The connector to the secure data store
+	 *
+	 * @since 1.0
+	 *
+	 * @var \UFHealth\Gravity_Forms_Secure_Storage\GF_Secure_Data_Connector
+	 */
+	protected $_data_connector;
+
+	/**
 	 * Full path the the plugin. Example: __FILE__
 	 *
 	 * @since 1.0
@@ -139,6 +148,8 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	public function init() {
 
 		parent::init();
+
+		$this->_data_connector = new GF_Secure_Data_Connector();
 
 		add_action( 'gform_after_submission', array( $this, 'action_gform_after_submission' ), 10, 2 );
 		add_action( 'gform_delete_entries', array( $this, 'action_gform_delete_entries' ), 10, 2 );
