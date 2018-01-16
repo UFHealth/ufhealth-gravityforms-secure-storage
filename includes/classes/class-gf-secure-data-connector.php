@@ -247,16 +247,7 @@ class GF_Secure_Data_Connector {
 			$this->settings = $form_settings;
 
 			if ( false === $this->_inno_client ) {
-
-				try {
-
-					$this->set_client();
-
-				} catch ( \Exception $e ) {
-
-					return false;
-
-				}
+				$this->set_client();
 			}
 
 			return true;
@@ -272,15 +263,9 @@ class GF_Secure_Data_Connector {
 	 *
 	 * @since 1.0
 	 *
-	 * @throws \Exception Throws an exception if connector hasn't been properly initialized.
-	 *
 	 * @return bool|\Tozny\E3DB\Client
 	 */
 	protected function set_client() {
-
-		if ( false === $this->settings ) {
-			throw new \Exception( esc_html__( 'Data connector must be initialized before attempting to access', 'ufhealth-gravity-forms-secure-storage' ) );
-		}
 
 		if ( false === $this->_inno_client ) {
 
