@@ -149,6 +149,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		parent::init();
 
+		require dirname( __FILE__ ) . '/class-gf-secure-data-connector.php';
 		$this->_data_connector = new GF_Secure_Data_Connector();
 
 		add_action( 'gform_after_submission', array( $this, 'action_gform_after_submission' ), 10, 2 );
