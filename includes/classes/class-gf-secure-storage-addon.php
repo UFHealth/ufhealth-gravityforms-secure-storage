@@ -414,10 +414,6 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 	}
 
-	protected function init_connector( $form_settings ) {
-
-	}
-
 	/**
 	 * The feedback callback for the 'text' settings on the form settings page.
 	 *

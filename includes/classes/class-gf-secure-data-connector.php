@@ -312,8 +312,4 @@ class GF_Secure_Data_Connector {
 		return $this->_inno_client;
 
 	}
-
-	public function update_record( $lead_id ) {
-
-	}
 }
