@@ -162,8 +162,6 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 	}
 
-
-
 	/**
 	 * Action gform_after_submission
 	 *
