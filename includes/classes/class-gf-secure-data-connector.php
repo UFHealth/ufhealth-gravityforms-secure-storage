@@ -41,8 +41,22 @@ class GF_Secure_Data_Connector {
 	 */
 	private $_entries = array();
 
+	/**
+	 * Array of form information
+	 *
+	 * @since 1.0
+	 *
+	 * @var bool|array
+	 */
 	protected $form = false;
 
+	/**
+	 * Array of form settings.
+	 *
+	 * @since 1.0
+	 *
+	 * @var bool|array
+	 */
 	protected $settings = false;
 
 	/**
