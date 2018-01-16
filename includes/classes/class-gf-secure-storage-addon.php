@@ -209,22 +209,33 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		global $wpdb;
 
-		$lead_table    = \GFFormsModel::get_lead_table_name();
-		$status_filter = empty( $status ) ? '' : $wpdb->prepare( 'AND status=%s', $status );
+		$form     = \GFAPI::get_form( $form_id );
+		$settings = $this->get_form_settings( $form );
 
-		// Get the entries.
-		$sql     = $wpdb->prepare( "SELECT * FROM $lead_table WHERE form_id=%d {$status_filter}", $form_id );
-		$results = $wpdb->get_results( $sql ); // WPCS: db call ok.
+		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-		if ( is_array( $results ) && ! empty( $results ) ) {
+			$lead_table    = \GFFormsModel::get_lead_table_name();
+			$status_filter = empty( $status ) ? '' : $wpdb->prepare( 'AND status=%s', $status );
 
-			$form = \GFAPI::get_form( $form_id );
+			// Get the entries.
+			$sql     = $wpdb->prepare( "SELECT * FROM $lead_table WHERE form_id=%d {$status_filter}", $form_id );
+			$results = $wpdb->get_results( $sql ); // WPCS: db call ok.
 
-			$client = $this->set_client( $form );
+			if ( is_array( $results ) && ! empty( $results ) ) {
 
-			foreach ( $results as $result ) {
+				foreach ( $results as $result ) {
 
+					try {
 
+						$this->_data_connector->delete_record( $result->id );
+
+					} catch ( \Exception $e ) {
+
+						// @todo This should stop everything as this could be really bad for regulatory compliance.
+						return;
+
+					}
+				}
 			}
 		}
 	}
