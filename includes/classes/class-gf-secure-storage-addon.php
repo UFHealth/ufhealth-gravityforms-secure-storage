@@ -146,20 +146,12 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-			try {
+			$this->_data_connector->init( $settings );
+			$this->_data_connector->add_record( $this->_secure_values, $entry['id'] );
 
-				$this->_data_connector->init( $settings );
-				$this->_data_connector->add_record( $this->_secure_values, $entry['id'] );
+			// Make sure we clean out the secured values locally to prevent it saving anywhere.
+			$this->_secure_values = array();
 
-				// Make sure we clean out the secured values locally to prevent it saving anywhere.
-				$this->_secure_values = array();
-
-			} catch ( \Exception $e ) {
-
-				// @todo This should stop everything as this could be really bad for regulatory compliance.
-				return;
-
-			}
 		}
 	}
 
@@ -191,29 +183,12 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			if ( is_array( $results ) && ! empty( $results ) ) {
 
-				try {
-
-					$this->_data_connector->init( $settings );
-
-				} catch ( \Exception $e ) {
-
-					// @todo This should stop everything as this could be really bad for regulatory compliance.
-					return;
-
-				}
+				$this->_data_connector->init( $settings );
 
 				foreach ( $results as $result ) {
 
-					try {
+					$this->_data_connector->delete_record( $result->id );
 
-						$this->_data_connector->delete_record( $result->id );
-
-					} catch ( \Exception $e ) {
-
-						// @todo This should stop everything as this could be really bad for regulatory compliance.
-						return;
-
-					}
 				}
 			}
 		}
@@ -237,17 +212,9 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-			try {
+			$this->_data_connector->init( $settings );
+			$this->_data_connector->delete_record( $entry_id );
 
-				$this->_data_connector->init( $settings );
-				$this->_data_connector->delete_record( $entry_id );
-
-			} catch ( \Exception $e ) {
-
-				// @todo This should stop everything as this could be really bad for regulatory compliance.
-				return;
-
-			}
 		}
 	}
 
@@ -320,17 +287,8 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-			try {
-
-				$this->_data_connector->init( $settings );
-				$record = $this->_data_connector->get_record( $lead['id'] );
-
-			} catch ( \Exception $e ) {
-
-				// @todo This should stop everything as this could be really bad for regulatory compliance.
-				return $display_value;
-
-			}
+			$this->_data_connector->init( $settings );
+			$record = $this->_data_connector->get_record( $lead['id'] );
 
 			// Populate the display value with the value from the secured data.
 			if ( is_array( $field['inputs'] ) ) {
@@ -377,17 +335,9 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			} else {
 
-				try {
+				$this->_data_connector->init( $settings );
+				$record = $this->_data_connector->get_record( $lead['id'] );
 
-					$this->_data_connector->init( $settings );
-					$record = $this->_data_connector->get_record( $lead['id'] );
-
-				} catch ( \Exception $e ) {
-
-					// @todo This should stop everything as this could be really bad for regulatory compliance.
-					return $value;
-
-				}
 			}
 
 			// Populate the display value with the value from the secured data.
