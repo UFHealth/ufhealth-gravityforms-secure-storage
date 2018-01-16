@@ -18,6 +18,10 @@ namespace UFHealth\Gravity_Forms_Secure_Storage;
  */
 class GF_Secure_Data_Connector {
 
+	public function __construct() {
+		
+	}
+
 	public function add_record() {
 
 	}
