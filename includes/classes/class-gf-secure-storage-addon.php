@@ -258,35 +258,15 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-			$client = $this->set_client( $form );
+			try {
 
-			$query = array(
-				'eq' =>
-					array(
-						'name'  => 'post_id',
-						'value' => $entry_id,
-					),
-			);
+				$this->_data_connector->delete_record( $entry_id );
 
-			$data   = true;
-			$raw    = false;
-			$writer = null;
-			$record = null;
-			$type   = null;
+			} catch ( \Exception $e ) {
 
-			$results = $client->query( $data, $raw, $writer, $record, $type, $query );
+				// @todo This should stop everything as this could be really bad for regulatory compliance.
+				return;
 
-			foreach ( $results as $record ) {
-
-				try {
-
-					$client->delete( $record->meta->record_id );
-
-				} catch ( ConflictException $e ) {
-
-					return;
-
-				}
 			}
 		}
 	}
