@@ -42,15 +42,6 @@ class GF_Secure_Data_Connector {
 	private $_entries = array();
 
 	/**
-	 * Array of form information
-	 *
-	 * @since 1.0
-	 *
-	 * @var bool|array
-	 */
-	protected $form = false;
-
-	/**
 	 * Array of form settings.
 	 *
 	 * @since 1.0
@@ -285,12 +276,10 @@ class GF_Secure_Data_Connector {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array $form          The current gravity form.
 	 * @param array $form_settings The settings for the current form.
 	 */
-	public function init( $form, $form_settings ) {
+	public function init( $form_settings ) {
 
-		$this->form     = $form;
 		$this->settings = $form_settings;
 
 	}
