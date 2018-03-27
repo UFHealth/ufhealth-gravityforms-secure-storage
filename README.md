@@ -52,6 +52,9 @@ Minified JS and CSS is great in production but it can make development much hard
 
 ## Changelog
 
+##### 1.1.1
+* Fix filter call to apply filter rather than add it.
+
 ##### 1.1
 * Provide an interface for data connectors as well as a filter to override the default Tozny data connector.
 
