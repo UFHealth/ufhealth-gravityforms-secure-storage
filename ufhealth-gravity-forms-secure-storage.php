@@ -13,7 +13,7 @@
  * @package UFHealth\gravity_forms_secure_storage
  */
 
-define( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_VERSION', '1.1' );
+define( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_VERSION', '1.1.1' );
 define( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_URL', plugin_dir_url( __FILE__ ) );
 define( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_INCLUDES', trailingslashit( plugin_dir_path( __FILE__ ) ) . 'includes/' );
 
