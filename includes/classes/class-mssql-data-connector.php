@@ -6,7 +6,7 @@
  *
  * @package UFHealth\Gravity_Forms_Secure_Storage
  *
- * @since   1.1.1
+ * @since   1.1.2
  *
  * @author  Chris Wiegman <cwiegman@ufl.edu>
  */
@@ -21,16 +21,25 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	/**
 	 * Array of form settings.
 	 *
-	 * @since 1.0
+	 * @since 1.1.2
 	 *
 	 * @var bool|array
 	 */
 	protected $settings = false;
 
 	/**
+	 * Connection to MSSQL
+	 *
+	 * @since 1.1.2
+	 *
+	 * @var mixed
+	 */
+	private $_mssql_connection = false;
+
+	/**
 	 * Write a record to secure storage.
 	 *
-	 * @since 1.0
+	 * @since 1.1.2
 	 *
 	 * @param array $secure_values Array of secure values.
 	 * @param int   $post_id       The post ID to index the secure values.
@@ -42,7 +51,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	/**
 	 * Returns the settings fields needed to configure the secure form.
 	 *
-	 * @since 1.0
+	 * @since 1.1.2
 	 *
 	 * @return array Array of settings fields.
 	 */
@@ -105,7 +114,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	/**
 	 * Delete a record from secure storage.
 	 *
-	 * @since 1.0
+	 * @since 1.1.2
 	 *
 	 * @param int $lead_id The id of the lead to delete from secure storage.
 	 */
@@ -116,7 +125,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	/**
 	 * Retrieve secure record data from data store.
 	 *
-	 * @since 1.0
+	 * @since 1.1.2
 	 *
 	 * @param int $lead_id The id of the record to retrieve.
 	 *
@@ -131,7 +140,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	/**
 	 * Setup information for the current form.
 	 *
-	 * @since 1.0
+	 * @since 1.1.2
 	 *
 	 * @param array $form_settings The settings for the current form.
 	 *
@@ -154,13 +163,19 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	/**
 	 * Retrieve the current instance of the Tozny client.
 	 *
-	 * @since 1.0
+	 * @since 1.1.2
 	 *
 	 * @return bool|\Tozny\E3DB\Client
 	 */
 	protected function set_client() {
 
-		return false;
+		if ( false === $this->_mssql_connection ) {
+
+			$this->_mssql_connection = mssql_connect( $this->settings['secure_database_host'], $this->settings['secure_database_username'], $this->settings['secure_database_password'] );
+
+		}
+
+		return $this->_mssql_connection;
 
 	}
 }
