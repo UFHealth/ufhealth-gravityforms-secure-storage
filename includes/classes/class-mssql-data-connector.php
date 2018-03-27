@@ -13,33 +13,10 @@
 
 namespace UFHealth\Gravity_Forms_Secure_Storage;
 
-use Tozny\E3DB\Client;
-use Tozny\E3DB\Config;
-use Tozny\E3DB\Connection\GuzzleConnection;
-use Tozny\E3DB\Exceptions\ConflictException;
-
 /**
  * Class MSSSQL_Data_Connector
  */
 class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
-
-	/**
-	 * The innovault API Url
-	 *
-	 * @since 1.0
-	 *
-	 * @var string
-	 */
-	protected $_api_url = 'https://api.e3db.com';
-
-	/**
-	 * Array of retrieved entries for display. Used to reduce API calls.
-	 *
-	 * @since 1.0
-	 *
-	 * @var array
-	 */
-	private $_entries = array();
 
 	/**
 	 * Array of form settings.
@@ -51,15 +28,6 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	protected $settings = false;
 
 	/**
-	 * The instance of the Tozny client.
-	 *
-	 * @since 1.0
-	 *
-	 * @var bool|\Tozny\E3DB\Client
-	 */
-	protected $_inno_client = false;
-
-	/**
 	 * Write a record to secure storage.
 	 *
 	 * @since 1.0
@@ -68,13 +36,6 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 * @param int   $post_id       The post ID to index the secure values.
 	 */
 	public function add_record( $secure_values, $post_id ) {
-
-		// Send the data to Innovault using post_id as an indexable item.
-		$meta_values = array(
-			'post_id' => $post_id,
-		);
-
-		$this->_inno_client->write( 'form_submission', $secure_values, $meta_values );
 
 	}
 
@@ -95,7 +56,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 						'label'   => esc_html__( 'Enable Secure Storage', 'ufhealth-gravity-forms-secure-storage' ),
 						'type'    => 'checkbox',
 						'name'    => 'enabled',
-						'tooltip' => esc_html__( 'Enables the Innovault back-end allowing secure storage on this form.', 'ufhealth-gravity-forms-secure-storage' ),
+						'tooltip' => esc_html__( 'Enables the MSSQL back-end allowing secure storage on this form.', 'ufhealth-gravity-forms-secure-storage' ),
 						'choices' => array(
 							array(
 								'label' => esc_html__( 'Enabled', 'ufhealth-gravity-forms-secure-storage' ),
@@ -104,42 +65,34 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 						),
 					),
 					array(
-						'label'             => esc_html__( 'Client ID', 'ufhealth-gravity-forms-secure-storage' ),
+						'label'             => esc_html__( 'Database Host', 'ufhealth-gravity-forms-secure-storage' ),
 						'type'              => 'text',
-						'name'              => 'secure_client_id',
-						'tooltip'           => esc_html__( 'Register your client at https://console.tozny.com/clients', 'ufhealth-gravity-forms-secure-storage' ),
+						'name'              => 'secure_database_host',
+						'tooltip'           => esc_html__( 'The host server of the MSSQL Database', 'ufhealth-gravity-forms-secure-storage' ),
 						'class'             => 'medium',
 						'feedback_callback' => array( $this, 'is_valid_setting' ),
 					),
 					array(
-						'label'             => esc_html__( 'API Key ID', 'ufhealth-gravity-forms-secure-storage' ),
+						'label'             => esc_html__( 'Database Name', 'ufhealth-gravity-forms-secure-storage' ),
 						'type'              => 'text',
-						'name'              => 'secure_api_key_id',
-						'tooltip'           => esc_html__( 'Register your client at https://console.tozny.com/clients', 'ufhealth-gravity-forms-secure-storage' ),
+						'name'              => 'secure_database_name',
+						'tooltip'           => esc_html__( 'The name of the MSSQL Database', 'ufhealth-gravity-forms-secure-storage' ),
 						'class'             => 'medium',
 						'feedback_callback' => array( $this, 'is_valid_setting' ),
 					),
 					array(
-						'label'             => esc_html__( 'API Secret', 'ufhealth-gravity-forms-secure-storage' ),
+						'label'             => esc_html__( 'Database Username', 'ufhealth-gravity-forms-secure-storage' ),
 						'type'              => 'text',
-						'name'              => 'secure_api_secret',
-						'tooltip'           => esc_html__( 'Register your client at https://console.tozny.com/clients', 'ufhealth-gravity-forms-secure-storage' ),
+						'name'              => 'secure_database_username',
+						'tooltip'           => esc_html__( 'The username for the MSSQL Database', 'ufhealth-gravity-forms-secure-storage' ),
 						'class'             => 'medium',
 						'feedback_callback' => array( $this, 'is_valid_setting' ),
 					),
 					array(
-						'label'             => esc_html__( 'Public Key', 'ufhealth-gravity-forms-secure-storage' ),
+						'label'             => esc_html__( 'Database Password', 'ufhealth-gravity-forms-secure-storage' ),
 						'type'              => 'text',
-						'name'              => 'secure_api_public_key',
-						'tooltip'           => esc_html__( 'Register your client at https://console.tozny.com/clients', 'ufhealth-gravity-forms-secure-storage' ),
-						'class'             => 'medium',
-						'feedback_callback' => array( $this, 'is_valid_setting' ),
-					),
-					array(
-						'label'             => esc_html__( 'Private Key', 'ufhealth-gravity-forms-secure-storage' ),
-						'type'              => 'text',
-						'name'              => 'secure_api_private_key',
-						'tooltip'           => esc_html__( 'Register your client at https://console.tozny.com/clients', 'ufhealth-gravity-forms-secure-storage' ),
+						'name'              => 'secure_database_password',
+						'tooltip'           => esc_html__( 'The user password for the MSSQL Database', 'ufhealth-gravity-forms-secure-storage' ),
 						'class'             => 'medium',
 						'feedback_callback' => array( $this, 'is_valid_setting' ),
 					),
@@ -158,35 +111,6 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 */
 	public function delete_record( $lead_id ) {
 
-		$query = array(
-			'eq' =>
-				array(
-					'name'  => 'post_id',
-					'value' => $lead_id,
-				),
-		);
-
-		$data   = true;
-		$raw    = false;
-		$writer = null;
-		$record = null;
-		$type   = null;
-
-		$results = $this->_inno_client->query( $data, $raw, $writer, $record, $type, $query );
-
-		foreach ( $results as $record ) {
-
-			try {
-
-				$this->_inno_client->delete( $record->meta->record_id );
-
-			} catch ( ConflictException $e ) {
-
-				return;
-
-			}
-		}
-
 	}
 
 	/**
@@ -199,33 +123,6 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 * @return array|bool Array of secure data or False on failure.
 	 */
 	public function get_record( $lead_id ) {
-
-		if ( ! isset( $this->_entries[ $lead_id ] ) ) {
-
-			$query = array(
-				'eq' =>
-					array(
-						'name'  => 'post_id',
-						'value' => $lead_id,
-					),
-			);
-
-			$data   = true;
-			$raw    = false;
-			$writer = null;
-			$record = null;
-			$type   = null;
-
-			$results = $this->_inno_client->query( $data, $raw, $writer, $record, $type, $query );
-
-			foreach ( $results as $record ) {
-				$this->_entries[ $lead_id ] = $record->data;
-			}
-		}
-
-		if ( isset( $this->_entries[ $lead_id ] ) ) {
-			return $this->_entries[ $lead_id ];
-		}
 
 		return false;
 
@@ -246,10 +143,6 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 			$this->settings = $form_settings;
 
-			if ( false === $this->_inno_client ) {
-				$this->set_client();
-			}
-
 			return true;
 
 		}
@@ -267,34 +160,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 */
 	protected function set_client() {
 
-		if ( false === $this->_inno_client ) {
-
-			$config = new Config(
-				$this->settings['secure_client_id'],
-				$this->settings['secure_api_key_id'],
-				$this->settings['secure_api_secret'],
-				$this->settings['secure_api_public_key'],
-				$this->settings['secure_api_private_key'],
-				$this->_api_url
-			);
-
-			/**
-			 * Pass the configuration to the default connection handler, which
-			 * uses Guzzle for requests. If you need a different library for
-			 * requests, subclass `\Tozny\E3DB\Connection` and pass an instance
-			 * of your custom implementation to the client instead.
-			 */
-			$connection = new GuzzleConnection( $config );
-
-			/**
-			 * Pass both the configuration and connection handler when building
-			 * a new client instance.
-			 */
-			$this->_inno_client = new Client( $config, $connection );
-
-		}
-
-		return $this->_inno_client;
+		return false;
 
 	}
 }
