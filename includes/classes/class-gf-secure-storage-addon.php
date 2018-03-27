@@ -117,8 +117,6 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		parent::init();
 
-		require UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_INCLUDES . '/interfaces/interface-gf-secure-data-connector.php';
-
 		require dirname( __FILE__ ) . '/class-tozny-data-connector.php';
 
 		/**
