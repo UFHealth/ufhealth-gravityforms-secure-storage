@@ -1,6 +1,6 @@
 <?php
 /**
- * GF Secure Data Connector
+ * Tozny Data Connector
  *
  * Allows for abstraction to connect to the data layer of choice for secure storage.
  *
@@ -19,9 +19,9 @@ use Tozny\E3DB\Connection\GuzzleConnection;
 use Tozny\E3DB\Exceptions\ConflictException;
 
 /**
- * Class GF_Secure_Data_Connector
+ * Class Tozny_Data_Connector
  */
-class GF_Secure_Data_Connector {
+class Tozny_Data_Connector implements GF_Secure_Data_Connector {
 
 	/**
 	 * The innovault API Url
