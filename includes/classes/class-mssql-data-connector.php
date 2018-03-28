@@ -165,13 +165,14 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 *
 	 * @since 1.1.2
 	 *
-	 * @return bool|\Tozny\E3DB\Client
+	 * @return mixed
 	 */
 	protected function set_client() {
 
 		if ( false === $this->_mssql_connection ) {
 
 			$this->_mssql_connection = mssql_connect( $this->settings['secure_database_host'], $this->settings['secure_database_username'], $this->settings['secure_database_password'] );
+			mssql_select_db( $this->settings['secure_database_name'], $this->_mssql_connection );
 
 		}
 
