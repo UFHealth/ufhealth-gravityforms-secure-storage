@@ -59,21 +59,19 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 		$stop = 1;
 
-		$sql = "CREATE TABLE fyi_links ("
-		       . " id INT NOT NULL"
-		       . ", url VARCHAR(80) NOT NULL"
-		       . ", notes VARCHAR(1024)"
-		       . ", counts INT"
-		       . ", time DATETIME"
-		       . ")";
-		$res = mssql_query( $sql, $con );
-		if ( ! $res ) {
-			print( "Table creation failed with error:\n" );
-			print( "   " . mssql_get_last_message() . "\n" );
-		} else {
-			print( "Table fyi_links created.\n" );
-		}
+		try {
+			$table_list = array();
+			$result     = $this->_mssql_connection->query( 'SELECT Distinct TABLE_NAME FROM information_schema.TABLES' );
+			$stop       = 1;
 
+			while ( $row = $result->fetch( \PDO::FETCH_NUM ) ) {
+				$table_list[] = $row[0];
+			}
+		} catch ( \PDOException $e ) {
+
+			echo $e->getMessage();
+
+		}
 	}
 
 	/**
@@ -215,8 +213,20 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 		if ( false === $this->_mssql_connection ) {
 
-			$this->_mssql_connection = mssql_connect( $this->settings['secure_database_host'], $this->settings['secure_database_username'], $this->settings['secure_database_password'] );
-			mssql_select_db( $this->settings['secure_database_name'], $this->_mssql_connection );
+			$host    = $this->settings['secure_database_host'];
+			$db      = $this->settings['secure_database_name'];
+			$user    = $this->settings['secure_database_username'];
+			$pass    = $this->settings['secure_database_password'];
+			$charset = 'utf8mb4';
+
+			$dsn = "dblib:host=$host;dbname=$db;charset=$charset";
+			$opt = array(
+				\PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+				\PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+				\PDO::ATTR_EMULATE_PREPARES   => false,
+			);
+
+			$this->_mssql_connection = new \PDO( $dsn, $user, $pass, $opt );
 
 		}
 
