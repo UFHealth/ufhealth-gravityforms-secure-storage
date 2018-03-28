@@ -57,12 +57,12 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 */
 	public function action_ufhealth_secure_gform_after_save_form( $form_meta, $is_new ) {
 
-		$stop = 1;
+		$table_list = array();
+		$table_name = 'site_' . get_current_blog_id() . '_form_' . $form_meta['id'];
 
 		try {
-			$table_list = array();
-			$result     = $this->_mssql_connection->query( 'SELECT Distinct TABLE_NAME FROM information_schema.TABLES' );
-			$stop       = 1;
+
+			$result = $this->_mssql_connection->query( 'SELECT Distinct TABLE_NAME FROM information_schema.TABLES' );
 
 			while ( $row = $result->fetch( \PDO::FETCH_NUM ) ) {
 				$table_list[] = $row[0];
@@ -70,6 +70,16 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 		} catch ( \PDOException $e ) {
 
 			echo $e->getMessage();
+
+		}
+
+		if ( in_array( $table_name, $table_list, true ) ) {
+
+		} else {
+
+			$this->_mssql_connection->query( '
+				CREATE TABLE ' . $table_name . ';
+			' );
 
 		}
 	}
