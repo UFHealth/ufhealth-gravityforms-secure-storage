@@ -128,7 +128,6 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		 */
 		$this->_data_connector = apply_filters( 'ufhealth_gf_secure_data_connector', new Tozny_Data_Connector() );
 
-		add_action( 'gform_after_save_form', array( $this, 'action_gform_after_save_form' ), 10, 2 );
 		add_action( 'gform_after_submission', array( $this, 'action_gform_after_submission' ), 10, 2 );
 		add_action( 'gform_delete_entries', array( $this, 'action_gform_delete_entries' ), 10, 2 );
 		add_action( 'gform_delete_lead', array( $this, 'action_gform_delete_lead' ) );
@@ -136,20 +135,6 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		add_filter( 'gform_entry_field_value', array( $this, 'filter_gform_entry_field_value' ), 10, 4 );
 		add_filter( 'gform_get_field_value', array( $this, 'filter_gform_get_field_value' ), 10, 3 );
-
-	}
-
-	/**
-	 * Action gform_after_save_form
-	 *
-	 * Make sure the MSSQL is present and correct.
-	 *
-	 * @since 1.1.2
-	 *
-	 * @param array $form_meta   The form meta.
-	 * @param bool  $form_exists Returns false if the form ID already exists.
-	 */
-	public function action_gform_after_save_form( $form_meta, $form_exists ) {
 
 	}
 
