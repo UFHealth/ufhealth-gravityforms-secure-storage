@@ -41,7 +41,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 */
 	public function __construct() {
 
-		add_action( 'gform_after_save_form', array( $this, 'action_gform_after_save_form' ), 10, 2 );
+		add_action( 'ufhealth_secure_gform_after_save_form', array( $this, 'action_ufhealth_secure_gform_after_save_form' ), 10, 2 );
 
 	}
 
@@ -55,7 +55,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 * @param array $form_meta The form meta.
 	 * @param bool  $is_new    True if this is a new form being created. False if this is an existing form being updated.
 	 */
-	public function action_gform_after_save_form( $form_meta, $is_new ) {
+	public function action_ufhealth_secure_gform_after_save_form( $form_meta, $is_new ) {
 
 		$stop = 1;
 
@@ -191,6 +191,10 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 		if ( false === $this->settings ) {
 
 			$this->settings = $form_settings;
+
+			if ( false === $this->_mssql_connection ) {
+				$this->set_client();
+			}
 
 			return true;
 
