@@ -37,6 +37,46 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	private $_mssql_connection = false;
 
 	/**
+	 * MSSSQL_Data_Connector constructor.
+	 */
+	public function __construct() {
+
+		add_action( 'gform_after_save_form', array( $this, 'action_gform_after_save_form' ), 10, 2 );
+
+	}
+
+	/**
+	 * Action gform_after_save_form
+	 *
+	 * Make sure the MSSQL is present and correct.
+	 *
+	 * @since 1.1.2
+	 *
+	 * @param array $form_meta The form meta.
+	 * @param bool  $is_new    True if this is a new form being created. False if this is an existing form being updated.
+	 */
+	public function action_gform_after_save_form( $form_meta, $is_new ) {
+
+		$stop = 1;
+
+		$sql = "CREATE TABLE fyi_links ("
+		       . " id INT NOT NULL"
+		       . ", url VARCHAR(80) NOT NULL"
+		       . ", notes VARCHAR(1024)"
+		       . ", counts INT"
+		       . ", time DATETIME"
+		       . ")";
+		$res = mssql_query( $sql, $con );
+		if ( ! $res ) {
+			print( "Table creation failed with error:\n" );
+			print( "   " . mssql_get_last_message() . "\n" );
+		} else {
+			print( "Table fyi_links created.\n" );
+		}
+
+	}
+
+	/**
 	 * Write a record to secure storage.
 	 *
 	 * @since 1.1.2
