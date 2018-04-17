@@ -139,6 +139,29 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	}
 
 	/**
+	 * Action gform_after_save_form
+	 *
+	 * Make sure the MSSQL is present and correct.
+	 *
+	 * @since 1.1.2
+	 *
+	 * @param array $form_meta The form meta.
+	 * @param bool  $is_new    True if this is a new form being created. False if this is an existing form being updated.
+	 */
+	public function action_gform_after_save_form( $form_meta, $is_new ) {
+
+		$settings = $this->get_form_settings( $form_meta );
+
+		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
+
+			$this->_data_connector->init( $settings );
+
+			do_action( 'ufhealth_secure_gform_after_save_form', $form_meta, $is_new );
+
+		}
+	}
+
+	/**
 	 * Action gform_after_submission
 	 *
 	 * Add the entry id to the secure data after it is available.
