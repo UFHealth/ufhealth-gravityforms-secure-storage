@@ -136,6 +136,21 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 */
 	public function add_record( $secure_values, $post_id, $column_names = array() ) {
 
+		$fields = '';
+		$values = '';
+
+		foreach ( $secure_values as $field => $value ) {
+
+			if ( ! empty ( $fields ) ) {
+				$fields .= ', ';
+				$values .= ', ';
+			}
+
+			$fields .= $column_names[$field];
+			$values .= '"' . $value . '"';
+
+		}
+
 		$stop = 1;
 
 	}
