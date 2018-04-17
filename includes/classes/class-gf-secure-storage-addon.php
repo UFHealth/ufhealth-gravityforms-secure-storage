@@ -447,7 +447,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		foreach ( $fields as $field ) {
 
 			// Save the secured values for later use being careful not to cache them anywhere.
-			if ( null === $field->inputs ) {
+			if ( null === $field->inputs || empty( $field->inputs ) ) {
 
 				$columns[ $field->id ] = strtolower( $field->label ) . '_' . $field->id;
 
