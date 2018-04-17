@@ -57,6 +57,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 */
 	public function action_ufhealth_secure_gform_after_save_form( $form_meta, $is_new ) {
 
+		// Create the database table if we need to.
 		$table_list = array();
 		$table_name = 'site_' . get_current_blog_id() . '_form_' . $form_meta['id'];
 
@@ -87,7 +88,41 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 		}
 
-		$stop = 1;
+		// Add each field to the table if needed.
+		$fields           = $form_meta['fields'];
+		$column_statement = $this->_mssql_connection->query( "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='" . $table_name . "';" );
+		$raw_columns      = $column_statement->fetchAll( \PDO::FETCH_ASSOC );
+		$columns          = array();
+
+		foreach ( $raw_columns as $column ) {
+			$columns[] = $column['COLUMN_NAME'];
+		}
+
+		foreach ( $fields as $field ) {
+
+			// Save the secured values for later use being careful not to cache them anywhere.
+			if ( null === $field->inputs ) {
+
+				$column_name = strtolower( $field->label ) . '_' . $field->id;
+
+				if ( ! in_array( $column_name, $columns, true ) ) {
+					$this->_mssql_connection->query( 'ALTER TABLE dbo.' . $table_name . ' ADD ' . $column_name . ' TEXT NULL;' );
+				}
+			} else {
+
+				foreach ( $field->inputs as $input ) {
+
+					$input_id     = explode( '.', $input['id'] );
+					$field_sub_id = $input_id[1];
+
+					$column_name = strtolower( $field->label ) . '_' . $field->id . '_' . strtolower( $input['label'] ) . '_' . $field_sub_id;
+
+					if ( ! in_array( $column_name, $columns, true ) ) {
+						$this->_mssql_connection->query( 'ALTER TABLE dbo.' . $table_name . ' ADD ' . $column_name . ' TEXT NULL;' );
+					}
+				}
+			}
+		}
 	}
 
 	/**
