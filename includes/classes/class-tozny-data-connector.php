@@ -65,9 +65,9 @@ class Tozny_Data_Connector implements GF_Secure_Data_Connector {
 	 * @since 1.0
 	 *
 	 * @param array $secure_values Array of secure values.
-	 * @param int   $post_id       The post ID to index the secure values.
+	 * @param array $column_names  Array of column names for writing straight to an external database.
 	 */
-	public function add_record( $secure_values, $post_id ) {
+	public function add_record( $secure_values, $post_id, $column_names = array() ) {
 
 		// Send the data to Innovault using post_id as an indexable item.
 		$meta_values = array(
