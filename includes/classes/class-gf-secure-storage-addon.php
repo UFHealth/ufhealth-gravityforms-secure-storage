@@ -406,6 +406,43 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	}
 
 	/**
+	 * Build column names for database usage.
+	 *
+	 * @since 1.1
+	 *
+	 * @param array $fields Array of form fields.
+	 *
+	 * @return array
+	 */
+	public static function get_column_names( $fields ) {
+
+		$columns = array();
+
+		foreach ( $fields as $field ) {
+
+			// Save the secured values for later use being careful not to cache them anywhere.
+			if ( null === $field->inputs ) {
+
+				$columns[ $field->id ] = strtolower( $field->label ) . '_' . $field->id;
+
+			} else {
+
+				foreach ( $field->inputs as $input ) {
+
+					$input_id     = explode( '.', $input['id'] );
+					$field_sub_id = $input_id[1];
+
+					$columns[ $field->id . '.' . $field_sub_id ] = strtolower( $field->label ) . '_' . $field->id . '_' . strtolower( $input['label'] ) . '_' . $field_sub_id;
+
+				}
+			}
+		}
+
+		return $columns;
+
+	}
+
+	/**
 	 * Create the local instance if needed.
 	 *
 	 * @since 1.0
