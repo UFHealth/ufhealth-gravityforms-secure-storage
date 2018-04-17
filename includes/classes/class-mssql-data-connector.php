@@ -132,8 +132,11 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 *
 	 * @param array $secure_values Array of secure values.
 	 * @param int   $post_id       The post ID to index the secure values.
+	 * @param array $column_names  Array of column names for writing straight to an external database.
 	 */
-	public function add_record( $secure_values, $post_id ) {
+	public function add_record( $secure_values, $post_id, $column_names = array() ) {
+
+		$stop = 1;
 
 	}
 
