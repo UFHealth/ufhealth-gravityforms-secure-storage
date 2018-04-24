@@ -133,22 +133,24 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 */
 	public function add_record( $secure_values, $post_id, $form_id, $column_names = array() ) {
 
-		$columns    = '';
-		$values     = '';
-		$table_name = 'site_' . get_current_blog_id() . '_form_' . $form_id;
+		$columns     = '';
+		$values      = '';
+		$table_name  = 'site_' . get_current_blog_id() . '_form_' . $form_id;
+		$exec_values = array();
 
 		foreach ( $secure_values as $field => $value ) {
 
-			$columns .= $column_names[ $field ] . ', ';
-			$values  .= "'" . $value . "', ";
+			$columns                               .= $column_names[ $field ] . ', ';
+			$values                                .= ':' . $column_names[ $field ] . ', ';
+			$exec_values[ $column_names[ $field ] ] = $value;
 
 			$stop = 1;
 
 		}
 
-		$sql = sprintf( 'INSERT INTO dbo.%s (%s) VALUES (%s);', $table_name, rtrim( trim( $columns ), ',' ), rtrim( trim( $values ), ',' ) );
+		$sql_statement = $this->_mssql_connection->prepare( sprintf( 'INSERT INTO dbo.%s (%s) VALUES (%s);', $table_name, rtrim( trim( $columns ), ',' ), rtrim( trim( $values ), ',' ) ) );
 
-		$this->_mssql_connection->query( $sql );
+		$sql_statement->execute( $exec_values );
 
 		$stop = 1;
 
