@@ -78,6 +78,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 			$sql = "CREATE TABLE " . $table_name . " ("
 			       . " ID INT IDENTITY(1,1) PRIMARY KEY"
+			       . ", Submitted DATETIME NOT NULL DEFAULT (GETDATE())"
 			       . ")";
 
 			$this->_mssql_connection->query( $sql );
