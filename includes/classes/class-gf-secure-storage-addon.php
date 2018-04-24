@@ -181,7 +181,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 			$column_names = $this->get_column_names( $form['fields'] );
 
 			$this->_data_connector->init( $settings );
-			$this->_data_connector->add_record( $this->_secure_values, $entry['id'], $column_names );
+			$this->_data_connector->add_record( $this->_secure_values, $entry['id'], $form['id'], $column_names );
 
 			// Make sure we clean out the secured values locally to prevent it saving anywhere.
 			$this->_secure_values = array();
