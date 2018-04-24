@@ -76,9 +76,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 		}
 
-		if ( in_array( $table_name, $table_list, true ) ) {
-
-		} else {
+		if ( ! in_array( $table_name, $table_list, true ) ) {
 
 			$sql = "CREATE TABLE " . $table_name . " ("
 			       . " ID INT IDENTITY(1,1) PRIMARY KEY"
@@ -146,7 +144,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 				$values .= ', ';
 			}
 
-			$fields .= $column_names[$field];
+			$fields .= $column_names[ $field ];
 			$values .= '"' . $value . '"';
 
 		}
