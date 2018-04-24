@@ -61,8 +61,6 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 		$table_list = array();
 		$table_name = 'site_' . get_current_blog_id() . '_form_' . $form_meta['id'];
 
-		//$result = $this->_mssql_connection->query( 'DROP TABLE ' . $table_name );
-
 		try {
 
 			$result = $this->_mssql_connection->query( 'SELECT Distinct TABLE_NAME FROM information_schema.TABLES' );
