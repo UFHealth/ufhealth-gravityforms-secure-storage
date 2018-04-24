@@ -144,15 +144,11 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 			$values                                .= ':' . $column_names[ $field ] . ', ';
 			$exec_values[ $column_names[ $field ] ] = $value;
 
-			$stop = 1;
-
 		}
 
 		$sql_statement = $this->_mssql_connection->prepare( sprintf( 'INSERT INTO dbo.%s (%s) VALUES (%s);', $table_name, rtrim( trim( $columns ), ',' ), rtrim( trim( $values ), ',' ) ) );
 
 		$sql_statement->execute( $exec_values );
-
-		$stop = 1;
 
 	}
 
