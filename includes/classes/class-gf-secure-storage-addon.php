@@ -28,13 +28,13 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	private static $_instance = null;
 
 	/**
-	 * The connector to the secure data store
+	 * A list of available data connectors.
 	 *
 	 * @since 1.0
 	 *
-	 * @var \UFHealth\Gravity_Forms_Secure_Storage\GF_Secure_Data_Connector
+	 * @var array
 	 */
-	protected $_data_connector;
+	protected $_data_connectors;
 
 	/**
 	 * Full path the the plugin. Example: __FILE__
@@ -123,7 +123,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		Tozny_Data_Connector::register_connector();
 		MSSSQL_Data_Connector::register_connector();
 
-		$data_connectors = apply_filters( 'ufhealth_gf_secure_data_connectors', array() );
+		$this->_data_connectors = apply_filters( 'ufhealth_gf_secure_data_connectors', array() );
 
 		/**
 		 * Provides the ability to override the Tozny Data Connector with a custom backend, thereby
