@@ -438,6 +438,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 */
 	public function form_settings_fields( $form ) {
 
+		// Populate the select box to select the appropriate connector.
 		$connectors = array();
 
 		foreach ( $this->_data_connectors as $id => $connector ) {
@@ -449,11 +450,12 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		}
 
+		// Set up fields common to all connectors.
 		$core_fields = array(
 			array(
 				'label'   => esc_html__( 'Select Data Connector', 'ufhealth-gravity-forms-secure-storage' ),
 				'type'    => 'select',
-				'name'    => 'cconnector',
+				'name'    => 'connector',
 				'tooltip' => esc_html__( 'Select the data connector to use with this form.', 'ufhealth-gravity-forms-secure-storage' ),
 				'choices' => $connectors,
 			),
@@ -471,7 +473,13 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 			),
 		);
 
+		// Get any fields specific to the connector.
 		$connector_fields = array();
+		$current_settings = $this->get_form_settings( $form );
+
+		if ( is_array( $current_settings ) && isset( $current_settings['connector'] ) ) {
+			$connector_fields = $this->_data_connectors[ $current_settings['connector'] ]->get_settings_fields();
+		}
 
 		$fields = array_merge( $core_fields, $connector_fields );
 
@@ -483,8 +491,6 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		);
 
 		return $settings;
-
-		return $data_connector->get_settings_fields();
 
 	}
 
