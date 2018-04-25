@@ -123,6 +123,13 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		Tozny_Data_Connector::register_connector();
 		MSSSQL_Data_Connector::register_connector();
 
+		/**
+		 * Registers the available backends
+		 *
+		 * @since 1.1
+		 *
+		 * @param array $connectors Array of data connectors in a name:connector format.
+		 */
 		$this->_data_connectors = apply_filters( 'ufhealth_gf_secure_data_connectors', array() );
 
 		add_action( 'gform_after_save_form', array( $this, 'action_gform_after_save_form' ), 10, 2 );
