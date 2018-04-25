@@ -23,7 +23,6 @@
 		"wp-enforcer"
 	],
 	"require-dev": {
-		"wp-cli/wp-cli": "^1.5@dev",
 		"phpunit/phpunit": "6.5.*",
 		"stevegrunwell/wp-enforcer": "dev-master"
 	}

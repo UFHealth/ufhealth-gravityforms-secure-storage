@@ -28,13 +28,13 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	private static $_instance = null;
 
 	/**
-	 * The connector to the secure data store
+	 * A list of available data connectors.
 	 *
 	 * @since 1.0
 	 *
-	 * @var \UFHealth\Gravity_Forms_Secure_Storage\GF_Secure_Data_Connector
+	 * @var array
 	 */
-	protected $_data_connector;
+	protected $_data_connectors;
 
 	/**
 	 * Full path the the plugin. Example: __FILE__
@@ -117,16 +117,20 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		parent::init();
 
-		require dirname( __FILE__ ) . '/class-tozny-data-connector.php';
+		require UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_INCLUDES . 'classes/class-tozny-data-connector.php';
+		require UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_INCLUDES . 'classes/class-mssql-data-connector.php';
+
+		Tozny_Data_Connector::register_connector();
+		MSSSQL_Data_Connector::register_connector();
 
 		/**
-		 * Provides the ability to override the Tozny Data Connector with a custom backend.
+		 * Registers the available backends
 		 *
 		 * @since 1.1
 		 *
-		 * @param GF_Secure_Data_Connector $data_connector A data connector conforming to the plugin specifications.s
+		 * @param array $connectors Array of data connectors in a name:connector format.
 		 */
-		$this->_data_connector = apply_filters( 'ufhealth_gf_secure_data_connector', new Tozny_Data_Connector() );
+		$this->_data_connectors = apply_filters( 'ufhealth_gf_secure_data_connectors', array() );
 
 		add_action( 'gform_after_save_form', array( $this, 'action_gform_after_save_form' ), 10, 2 );
 		add_action( 'gform_after_submission', array( $this, 'action_gform_after_submission' ), 10, 2 );
@@ -151,11 +155,12 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 */
 	public function action_gform_after_save_form( $form_meta, $is_new ) {
 
-		$settings = $this->get_form_settings( $form_meta );
+		$settings       = $this->get_form_settings( $form_meta );
+		$data_connector = $this->_data_connectors[ $settings['connector'] ];
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-			$this->_data_connector->init( $settings );
+			$data_connector->init( $settings );
 
 			do_action( 'ufhealth_secure_gform_after_save_form', $form_meta, $is_new );
 
@@ -174,14 +179,15 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 */
 	public function action_gform_after_submission( $entry, $form ) {
 
-		$settings = $this->get_form_settings( $form );
+		$settings       = $this->get_form_settings( $form );
+		$data_connector = $this->_data_connectors[ $settings['connector'] ];
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
 			$column_names = $this->get_column_names( $form['fields'] );
 
-			$this->_data_connector->init( $settings );
-			$this->_data_connector->add_record( $this->_secure_values, $entry['id'], $form['id'], $column_names );
+			$data_connector->init( $settings );
+			$data_connector->add_record( $this->_secure_values, $entry['id'], $form['id'], $column_names );
 
 			// Make sure we clean out the secured values locally to prevent it saving anywhere.
 			$this->_secure_values = array();
@@ -203,8 +209,9 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		global $wpdb;
 
-		$form     = \GFAPI::get_form( $form_id );
-		$settings = $this->get_form_settings( $form );
+		$form           = \GFAPI::get_form( $form_id );
+		$settings       = $this->get_form_settings( $form );
+		$data_connector = $this->_data_connectors[ $settings['connector'] ];
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
@@ -217,11 +224,11 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			if ( is_array( $results ) && ! empty( $results ) ) {
 
-				$this->_data_connector->init( $settings );
+				$data_connector->init( $settings );
 
 				foreach ( $results as $result ) {
 
-					$this->_data_connector->delete_record( $result->id );
+					$data_connector->delete_record( $result->id );
 
 				}
 			}
@@ -242,12 +249,13 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		$entry = \GFAPI::get_entry( $entry_id );
 		$form  = \GFAPI::get_form( $entry['form_id'] );
 
-		$settings = $this->get_form_settings( $form );
+		$settings       = $this->get_form_settings( $form );
+		$data_connector = $this->_data_connectors[ $settings['connector'] ];
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-			$this->_data_connector->init( $settings );
-			$this->_data_connector->delete_record( $entry_id );
+			$data_connector->init( $settings );
+			$data_connector->delete_record( $entry_id );
 
 		}
 	}
@@ -317,12 +325,13 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 */
 	public function filter_gform_entry_field_value( $display_value, $field, $lead, $form ) {
 
-		$settings = $this->get_form_settings( $form );
+		$settings       = $this->get_form_settings( $form );
+		$data_connector = $this->_data_connectors[ $settings['connector'] ];
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-			$this->_data_connector->init( $settings );
-			$record = $this->_data_connector->get_record( $lead['id'] );
+			$data_connector->init( $settings );
+			$record = $data_connector->get_record( $lead['id'] );
 
 			// Populate the display value with the value from the secured data.
 			if ( is_array( $field['inputs'] ) ) {
@@ -361,6 +370,8 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		$form     = \GFAPI::get_form( $field['formId'] );
 		$settings = $this->get_form_settings( $form );
 
+		$data_connector = $this->_data_connectors[ $settings['connector'] ];
+
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
 			if ( is_array( $this->_secure_values ) && ! empty( $this->_secure_values ) ) {
@@ -369,8 +380,8 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			} else {
 
-				$this->_data_connector->init( $settings );
-				$record = $this->_data_connector->get_record( $lead['id'] );
+				$data_connector->init( $settings );
+				$record = $data_connector->get_record( $lead['id'] );
 
 			}
 
@@ -427,7 +438,59 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 */
 	public function form_settings_fields( $form ) {
 
-		return $this->_data_connector->get_settings_fields();
+		// Populate the select box to select the appropriate connector.
+		$connectors = array();
+
+		foreach ( $this->_data_connectors as $id => $connector ) {
+
+			$connectors[] = array(
+				'value' => $id,
+				'label' => $connector->get_label(),
+			);
+
+		}
+
+		// Set up fields common to all connectors.
+		$core_fields = array(
+			array(
+				'label'   => esc_html__( 'Select Data Connector', 'ufhealth-gravity-forms-secure-storage' ),
+				'type'    => 'select',
+				'name'    => 'connector',
+				'tooltip' => esc_html__( 'Select the data connector to use with this form.', 'ufhealth-gravity-forms-secure-storage' ),
+				'choices' => $connectors,
+			),
+			array(
+				'label'   => esc_html__( 'Enable Secure Storage', 'ufhealth-gravity-forms-secure-storage' ),
+				'type'    => 'checkbox',
+				'name'    => 'enabled',
+				'tooltip' => esc_html__( 'Enables the secure storage back-end allowing secure storage on this form.', 'ufhealth-gravity-forms-secure-storage' ),
+				'choices' => array(
+					array(
+						'label' => esc_html__( 'Enabled', 'ufhealth-gravity-forms-secure-storage' ),
+						'name'  => 'enabled',
+					),
+				),
+			),
+		);
+
+		// Get any fields specific to the connector.
+		$connector_fields = array();
+		$current_settings = $this->get_form_settings( $form );
+
+		if ( is_array( $current_settings ) && isset( $current_settings['connector'] ) ) {
+			$connector_fields = $this->_data_connectors[ $current_settings['connector'] ]->get_settings_fields();
+		}
+
+		$fields = array_merge( $core_fields, $connector_fields );
+
+		$settings = array(
+			array(
+				'title'  => esc_html__( 'Secure Storage Settings', 'ufhealth-gravity-forms-secure-storage' ),
+				'fields' => $fields,
+			),
+		);
+
+		return $settings;
 
 	}
 

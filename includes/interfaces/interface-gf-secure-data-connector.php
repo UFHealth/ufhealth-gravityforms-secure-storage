@@ -60,6 +60,15 @@ interface GF_Secure_Data_Connector {
 	public function get_record( $lead_id );
 
 	/**
+	 * Returns the label used to help select the data connector in settings.
+	 *
+	 * @since 1.0
+	 *
+	 * @return string
+	 */
+	public function get_label();
+
+	/**
 	 * Setup information for the current form.
 	 *
 	 * @since 1.0
@@ -69,5 +78,23 @@ interface GF_Secure_Data_Connector {
 	 * @return bool True on success or false.
 	 */
 	public function init( $form_settings );
+
+	/**
+	 * Adds the appropriate filter to register this data connector.
+	 *
+	 * @since 1.0
+	 */
+	public static function register_connector();
+
+	/**
+	 * Register the connector itself.
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $connectors Array of data connectors in a name:connector format.
+	 *
+	 * @return array
+	 */
+	public static function filter_ufhealth_gf_secure_data_connectors( $connectors );
 
 }
