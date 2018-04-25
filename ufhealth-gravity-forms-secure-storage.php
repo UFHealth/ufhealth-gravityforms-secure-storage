@@ -54,24 +54,3 @@ function ufhealth_gravity_forms_secure_storage_gf_loader() {
 	GFAddOn::register( '\UFHealth\Gravity_Forms_Secure_Storage\GF_Secure_Storage_Addon' );
 
 }
-
-add_filter( 'ufhealth_gf_secure_data_connector', 'filter_ufhealth_gf_secure_data_connector' );
-
-/**
- * Filter ufhealth_gf_secure_data_connector
- *
- * @since 1.1.1
- *
- * @param \UFHealth\Gravity_Forms_Secure_Storage\GF_Secure_Data_Connector $data_connector A data connector conforming to the plugin specifications.
- *
- * @return \UFHealth\Gravity_Forms_Secure_Storage\GF_Secure_Data_Connector
- */
-function filter_ufhealth_gf_secure_data_connector( $data_connector ) {
-
-	require UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_INCLUDES . 'classes/class-mssql-data-connector.php';
-
-	$data_connector = new \UFHealth\Gravity_Forms_Secure_Storage\MSSSQL_Data_Connector();
-
-	return $data_connector;
-
-}
