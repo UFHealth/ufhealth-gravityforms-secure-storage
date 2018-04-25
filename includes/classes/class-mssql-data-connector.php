@@ -141,8 +141,8 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 		foreach ( $secure_values as $field => $value ) {
 
-			$columns                               .= $column_names[ $field ] . ', ';
-			$values                                .= ':' . $column_names[ $field ] . ', ';
+			$columns                                .= $column_names[ $field ] . ', ';
+			$values                                 .= ':' . $column_names[ $field ] . ', ';
 			$exec_values[ $column_names[ $field ] ] = $value;
 
 		}
@@ -266,6 +266,34 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 		}
 
 		return false;
+
+	}
+
+	/**
+	 * Adds the appropriate filter to register this data connector.
+	 *
+	 * @since 1.0
+	 */
+	public static function register_connector() {
+
+		add_filter( 'ufhealth_gf_secure_data_connectors', array( '\UFHealth\Gravity_Forms_Secure_Storage\MSSSQL_Data_Connector', 'filter_ufhealth_gf_secure_data_connectors' ) );
+
+	}
+
+	/**
+	 * Register the connector itself.
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $connectors Array of data connectors in a name:connector format.
+	 *
+	 * @return array
+	 */
+	public static function filter_ufhealth_gf_secure_data_connectors( $connectors ) {
+
+		$connectors['mssql'] = new MSSSQL_Data_Connector();
+
+		return $connectors;
 
 	}
 
