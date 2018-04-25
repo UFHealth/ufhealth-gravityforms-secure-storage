@@ -70,4 +70,22 @@ interface GF_Secure_Data_Connector {
 	 */
 	public function init( $form_settings );
 
+	/**
+	 * Adds the appropriate filter to register this data connector.
+	 *
+	 * @since 1.0
+	 */
+	public static function register_connector();
+
+	/**
+	 * Register the connector itself.
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $connectors Array of data connectors in a name:connector format.
+	 *
+	 * @return array
+	 */
+	public static function filter_ufhealth_gf_secure_data_connectors( $connectors );
+
 }
