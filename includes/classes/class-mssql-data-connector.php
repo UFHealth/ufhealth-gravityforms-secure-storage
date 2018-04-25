@@ -298,6 +298,19 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	}
 
 	/**
+	 * Returns the label used to help select the data connector in settings.
+	 *
+	 * @since 1.0
+	 *
+	 * @return string
+	 */
+	public function get_label() {
+
+		return esc_html__( 'MS SQL Database', 'ufhealth-gravity-forms-secure-storage' );
+
+	}
+
+	/**
 	 * Retrieve the current instance of the Tozny client.
 	 *
 	 * @since 1.1.2
