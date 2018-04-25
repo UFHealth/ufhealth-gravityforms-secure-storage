@@ -125,15 +125,6 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		$this->_data_connectors = apply_filters( 'ufhealth_gf_secure_data_connectors', array() );
 
-		/**
-		 * Provides the ability to override the Tozny Data Connector with a custom backend, thereby
-		 *
-		 * @since 1.1
-		 *
-		 * @param GF_Secure_Data_Connector $data_connector A data connector conforming to the plugin specifications.s
-		 */
-		$data_connector = apply_filters( 'ufhealth_gf_secure_data_connector', new Tozny_Data_Connector() );
-
 		add_action( 'gform_after_save_form', array( $this, 'action_gform_after_save_form' ), 10, 2 );
 		add_action( 'gform_after_submission', array( $this, 'action_gform_after_submission' ), 10, 2 );
 		add_action( 'gform_delete_entries', array( $this, 'action_gform_delete_entries' ), 10, 2 );
