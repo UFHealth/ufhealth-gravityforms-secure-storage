@@ -52,6 +52,10 @@ Minified JS and CSS is great in production but it can make development much hard
 
 ## Changelog
 
+##### 1.2
+* Added better abstraction to allow for more dynamic data connectors
+* Added an MS SQL data connector.
+
 ##### 1.1.2
 * Better loading of Interface
 
