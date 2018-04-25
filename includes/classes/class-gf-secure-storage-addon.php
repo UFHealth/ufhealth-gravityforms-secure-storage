@@ -132,7 +132,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		 *
 		 * @param GF_Secure_Data_Connector $data_connector A data connector conforming to the plugin specifications.s
 		 */
-		$this->_data_connector = apply_filters( 'ufhealth_gf_secure_data_connector', new Tozny_Data_Connector() );
+		$data_connector = apply_filters( 'ufhealth_gf_secure_data_connector', new Tozny_Data_Connector() );
 
 		add_action( 'gform_after_save_form', array( $this, 'action_gform_after_save_form' ), 10, 2 );
 		add_action( 'gform_after_submission', array( $this, 'action_gform_after_submission' ), 10, 2 );
@@ -161,7 +161,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-			$this->_data_connector->init( $settings );
+			$data_connector->init( $settings );
 
 			do_action( 'ufhealth_secure_gform_after_save_form', $form_meta, $is_new );
 
@@ -186,8 +186,8 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			$column_names = $this->get_column_names( $form['fields'] );
 
-			$this->_data_connector->init( $settings );
-			$this->_data_connector->add_record( $this->_secure_values, $entry['id'], $form['id'], $column_names );
+			$data_connector->init( $settings );
+			$data_connector->add_record( $this->_secure_values, $entry['id'], $form['id'], $column_names );
 
 			// Make sure we clean out the secured values locally to prevent it saving anywhere.
 			$this->_secure_values = array();
@@ -223,11 +223,11 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			if ( is_array( $results ) && ! empty( $results ) ) {
 
-				$this->_data_connector->init( $settings );
+				$data_connector->init( $settings );
 
 				foreach ( $results as $result ) {
 
-					$this->_data_connector->delete_record( $result->id );
+					$data_connector->delete_record( $result->id );
 
 				}
 			}
@@ -252,8 +252,8 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-			$this->_data_connector->init( $settings );
-			$this->_data_connector->delete_record( $entry_id );
+			$data_connector->init( $settings );
+			$data_connector->delete_record( $entry_id );
 
 		}
 	}
@@ -327,8 +327,8 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
 
-			$this->_data_connector->init( $settings );
-			$record = $this->_data_connector->get_record( $lead['id'] );
+			$data_connector->init( $settings );
+			$record = $data_connector->get_record( $lead['id'] );
 
 			// Populate the display value with the value from the secured data.
 			if ( is_array( $field['inputs'] ) ) {
@@ -375,8 +375,8 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			} else {
 
-				$this->_data_connector->init( $settings );
-				$record = $this->_data_connector->get_record( $lead['id'] );
+				$data_connector->init( $settings );
+				$record = $data_connector->get_record( $lead['id'] );
 
 			}
 
@@ -433,7 +433,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 */
 	public function form_settings_fields( $form ) {
 
-		return $this->_data_connector->get_settings_fields();
+		return $data_connector->get_settings_fields();
 
 	}
 
