@@ -120,8 +120,13 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		require UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_INCLUDES . 'classes/class-tozny-data-connector.php';
 		require UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_INCLUDES . 'classes/class-mssql-data-connector.php';
 
+		Tozny_Data_Connector::register_connector();
+		MSSSQL_Data_Connector::register_connector();
+
+		$data_connectors = apply_filters( 'ufhealth_gf_secure_data_connectors', array() );
+
 		/**
-		 * Provides the ability to override the Tozny Data Connector with a custom backend.
+		 * Provides the ability to override the Tozny Data Connector with a custom backend, thereby
 		 *
 		 * @since 1.1
 		 *
