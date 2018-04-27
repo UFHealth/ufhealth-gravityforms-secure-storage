@@ -25,12 +25,17 @@ build_assets:
   image: php:7.2
   script:
     - php composer.phar install
+    - curl -sL https://deb.nodesource.com/setup_8.x | bash -
+    - apt-get install nodejs
+    - grunt
   artifacts:
     expire_in: 1 day
     paths:
       - vendor/
+      - languages/
   cache:
       paths:
+        - node_modules
         - vendor/
 
 # Test PHP 7.2
