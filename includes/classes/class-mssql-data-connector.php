@@ -335,7 +335,7 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 		}
 
-		return $this->_mssql_connection;
+		return true;
 
 	}
 }
