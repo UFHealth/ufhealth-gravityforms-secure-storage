@@ -245,7 +245,7 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 			$this->settings = $form_settings;
 
 			if ( false === $this->_mssql_connection ) {
-				$this->set_client();
+				return $this->set_client();
 			}
 
 			return true;
