@@ -20,6 +20,7 @@ stages:
   - build
   - test
 
+# Let's get assets, language files and compoaser and node builds
 build_assets:
   stage: build
   image: php:7.2
@@ -35,7 +36,7 @@ build_assets:
       - languages/
   cache:
       paths:
-        - node_modules
+        - node_modules/
         - vendor/
 
 # Test PHP 7.2
