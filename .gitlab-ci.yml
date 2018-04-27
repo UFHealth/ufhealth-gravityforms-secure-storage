@@ -7,7 +7,7 @@ variables:
   GIT_SSL_NO_VERIFY: 'true'
 
 services:
-- mysql
+- mysql:5.7
 
 before_script:
 # Install git, the php image doesn't have installed
