@@ -53,6 +53,8 @@ test:7.2:
     - docker-php-ext-configure pdo_dblib --with-libdir=lib/x86_64-linux-gnu
     - docker-php-ext-install -j$(nproc) pdo_dblib
     - docker-php-ext-enable mysqli pdo_mysql mbstring pdo_dblib
+    # Install Xdebug
+    - pecl install xdebug
     # Install and run unit tests
     - bash tests/bin/install-wp-tests.sh wordpress_test root mysql mysql $WP_VERSION
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
