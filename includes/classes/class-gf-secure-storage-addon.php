@@ -219,8 +219,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 			$status_filter = empty( $status ) ? '' : $wpdb->prepare( 'AND status=%s', $status );
 
 			// Get the entries.
-			$sql     = $wpdb->prepare( "SELECT * FROM $lead_table WHERE form_id=%d {$status_filter}", $form_id );
-			$results = $wpdb->get_results( $sql ); // WPCS: db call ok.
+			$results = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM %s WHERE form_id=%d %s', $lead_table, $form_id, $status_filter ) ); // WPCS: db call ok.
 
 			if ( is_array( $results ) && ! empty( $results ) ) {
 
