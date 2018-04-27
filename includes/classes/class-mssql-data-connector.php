@@ -263,7 +263,7 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 */
 	public static function register_connector() {
 
-		add_filter( 'ufhealth_gf_secure_data_connectors', array( 'MSSQL_Data_Connector', 'filter_ufhealth_gf_secure_data_connectors' ) );
+		add_filter( 'ufhealth_gf_secure_data_connectors', array( '\UFHealth\Gravity_Forms_Secure_Storage\MSSQL_Data_Connector', 'filter_ufhealth_gf_secure_data_connectors' ) );
 
 	}
 
