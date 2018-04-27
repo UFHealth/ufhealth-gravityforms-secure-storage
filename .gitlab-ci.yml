@@ -4,7 +4,8 @@ variables:
 before_script:
 # Install git, the php image doesn't have installed
 - apt-get update -yqq
-- apt-get install git libxml2-dev unzip -yqq php7.2-sybase
+- apt-get install git libxml2-dev unzip -yqq
+- docker-php-ext-install sybase
 # Install composer
 - curl -sS https://getcomposer.org/installer | php
 
