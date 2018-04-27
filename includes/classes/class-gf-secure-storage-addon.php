@@ -363,6 +363,12 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 * Restore secure values to lead.
 	 *
 	 * @since 1.0
+	 *
+	 * @param mixed $value The field value.
+	 * @param array $lead  The form submission.
+	 * @param array $field The form field.
+	 *
+	 * @return mixed
 	 */
 	public function filter_gform_get_field_value( $value, $lead, $field ) {
 
