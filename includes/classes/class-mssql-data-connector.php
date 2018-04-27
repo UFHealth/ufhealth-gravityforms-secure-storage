@@ -70,7 +70,7 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 			}
 		} catch ( \PDOException $e ) {
 
-			echo $e->getMessage();
+			echo esc_html( $e->getMessage() );
 
 		}
 
