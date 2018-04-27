@@ -4,7 +4,7 @@ variables:
 before_script:
 # Install git, the php image doesn't have installed
 - apt-get update -yqq
-- apt-get install git libxml2-dev unzip freetds-bin freetds-dev freetds-common -yqq
+- apt-get install git libxml2-dev unzip freetds-bin libssl-dev freetds-dev freetds-common -yqq
 - docker-php-ext-install pdo_dblib
 # Install composer
 - curl -sS https://getcomposer.org/installer | php
