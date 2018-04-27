@@ -298,7 +298,7 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	}
 
 	/**
-	 * Retrieve the current instance of the Tozny client.
+	 * Retrieve the current instance of the MS SQL client.
 	 *
 	 * @since 1.1.2
 	 *
