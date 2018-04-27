@@ -266,7 +266,7 @@ class Tozny_Data_Connector implements GF_Secure_Data_Connector {
 	 */
 	public static function filter_ufhealth_gf_secure_data_connectors( $connectors ) {
 
-		$connectors['tozny'] = new Tozny_Data_Connector();
+		$connectors['tozny'] = new static();
 
 		return $connectors;
 

@@ -14,9 +14,9 @@
 namespace UFHealth\Gravity_Forms_Secure_Storage;
 
 /**
- * Class MSSSQL_Data_Connector
+ * Class MSSQL_Data_Connector
  */
-class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
+class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 	/**
 	 * Array of form settings.
@@ -37,7 +37,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	private $_mssql_connection = false;
 
 	/**
-	 * MSSSQL_Data_Connector constructor.
+	 * MSSQL_Data_Connector constructor.
 	 */
 	public function __construct() {
 
@@ -65,21 +65,20 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 			$result = $this->_mssql_connection->query( 'SELECT Distinct TABLE_NAME FROM information_schema.TABLES' );
 
+			// phpcs:disable
 			while ( $row = $result->fetch( \PDO::FETCH_NUM ) ) {
 				$table_list[] = $row[0];
 			}
+			// phpcs:enable
 		} catch ( \PDOException $e ) {
 
-			echo $e->getMessage();
+			echo esc_html( $e->getMessage() );
 
 		}
 
 		if ( ! in_array( $table_name, $table_list, true ) ) {
 
-			$sql = "CREATE TABLE " . $table_name . " ("
-			       . " ID INT IDENTITY(1,1) PRIMARY KEY"
-			       . ", Submitted DATETIME NOT NULL DEFAULT (GETDATE())"
-			       . ")";
+			$sql = 'CREATE TABLE ' . $table_name . ' ( ID INT IDENTITY(1,1) PRIMARY KEY, Submitted DATETIME NOT NULL DEFAULT (GETDATE()))';
 
 			$this->_mssql_connection->query( $sql );
 
@@ -87,9 +86,13 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 		// Add each field to the table if needed.
 		$fields           = $form_meta['fields'];
-		$column_statement = $this->_mssql_connection->query( "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='" . $table_name . "';" );
-		$raw_columns      = $column_statement->fetchAll( \PDO::FETCH_ASSOC );
-		$columns          = array();
+		$column_statement = $this->_mssql_connection->query( sprintf( 'SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME=\'%s\';', $table_name ) );
+
+		// phpcs:disable
+		$raw_columns = $column_statement->fetchAll( \PDO::FETCH_ASSOC ); // WPCS: db call ok.
+		// phpcs:enable
+
+		$columns = array();
 
 		foreach ( $raw_columns as $column ) {
 			$columns[] = $column['COLUMN_NAME'];
@@ -141,8 +144,9 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 		foreach ( $secure_values as $field => $value ) {
 
-			$columns                                .= $column_names[ $field ] . ', ';
-			$values                                 .= ':' . $column_names[ $field ] . ', ';
+			$columns .= $column_names[ $field ] . ', ';
+			$values  .= ':' . $column_names[ $field ] . ', ';
+
 			$exec_values[ $column_names[ $field ] ] = $value;
 
 		}
@@ -241,7 +245,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 			$this->settings = $form_settings;
 
 			if ( false === $this->_mssql_connection ) {
-				$this->set_client();
+				return $this->set_client();
 			}
 
 			return true;
@@ -259,7 +263,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 */
 	public static function register_connector() {
 
-		add_filter( 'ufhealth_gf_secure_data_connectors', array( '\UFHealth\Gravity_Forms_Secure_Storage\MSSSQL_Data_Connector', 'filter_ufhealth_gf_secure_data_connectors' ) );
+		add_filter( 'ufhealth_gf_secure_data_connectors', array( '\UFHealth\Gravity_Forms_Secure_Storage\MSSQL_Data_Connector', 'filter_ufhealth_gf_secure_data_connectors' ) );
 
 	}
 
@@ -274,7 +278,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 */
 	public static function filter_ufhealth_gf_secure_data_connectors( $connectors ) {
 
-		$connectors['mssql'] = new MSSSQL_Data_Connector();
+		$connectors['mssql'] = new static();
 
 		return $connectors;
 
@@ -294,7 +298,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	}
 
 	/**
-	 * Retrieve the current instance of the Tozny client.
+	 * Retrieve the current instance of the MS SQL client.
 	 *
 	 * @since 1.1.2
 	 *
@@ -311,17 +315,27 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 			$charset = 'utf8mb4';
 
 			$dsn = "dblib:host=$host;dbname=$db;charset=$charset";
+			// phpcs:disable
 			$opt = array(
 				\PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
 				\PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
 				\PDO::ATTR_EMULATE_PREPARES   => false,
 			);
 
-			$this->_mssql_connection = new \PDO( $dsn, $user, $pass, $opt );
+			try {
+
+				$this->_mssql_connection = new \PDO( $dsn, $user, $pass, $opt );
+
+			} catch ( \PDOException $e ) {
+
+				return false;
+
+			}
+			// phpcs:enable
 
 		}
 
-		return $this->_mssql_connection;
+		return true;
 
 	}
 }
