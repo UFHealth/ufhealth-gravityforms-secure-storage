@@ -17,7 +17,6 @@ before_script:
 - docker-php-ext-enable mysqli pdo_mysql mbstring pdo_dblib
 # Install composer
 - curl -sS https://getcomposer.org/installer | php
-- bash bin/install-wp-tests.sh wordpress_test root mysql mysql $WP_VERSION
 
 stages:
   - build
@@ -28,6 +27,7 @@ build_assets:
   image: php:7.2
   script:
     - php composer.phar install
+    - bash bin/install-wp-tests.sh wordpress_test root mysql mysql $WP_VERSION
   artifacts:
     expire_in: 1 day
     paths:
