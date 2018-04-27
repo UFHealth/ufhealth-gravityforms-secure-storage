@@ -27,7 +27,7 @@ build_assets:
   script:
     - php composer.phar install
     - curl -sL https://deb.nodesource.com/setup_8.x | bash -
-    - apt-get install nodejs
+    - apt-get install nodejs -yqq
     - grunt
   artifacts:
     expire_in: 1 day
