@@ -5,8 +5,10 @@ before_script:
 # Install git, the php image doesn't have installed
 - apt-get update -yqq
 - apt-get install git libxml2-dev unzip freetds-bin freetds-dev freetds-common vim wget zip unzip subversion mysql-client libmcrypt-dev libmysqlclient-dev --fix-missing -yqq
-- ln -s /usr/lib/x86_64-linux-gnu/libsybdb.a /usr/lib/
-- docker-php-ext-install pdo_dblib mysqli pdo_mysql mbstring
+- docker-php-ext-install mysqli pdo_mysql mbstring
+- docker-php-ext-configure pdo_dblib --with-libdir=lib/x86_64-linux-gnu
+- docker-php-ext-install -j$(nproc) pdo_dblib
+
 - docker-php-ext-enable mysqli pdo_mysql mbstring pdo_dblib
 # Install composer
 - curl -sS https://getcomposer.org/installer | php
