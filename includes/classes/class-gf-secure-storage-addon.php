@@ -121,7 +121,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		require UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_INCLUDES . 'classes/class-mssql-data-connector.php';
 
 		Tozny_Data_Connector::register_connector();
-		MSSSQL_Data_Connector::register_connector();
+		MSSQL_Data_Connector::register_connector();
 
 		/**
 		 * Registers the available backends

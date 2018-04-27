@@ -14,9 +14,9 @@
 namespace UFHealth\Gravity_Forms_Secure_Storage;
 
 /**
- * Class MSSSQL_Data_Connector
+ * Class MSSQL_Data_Connector
  */
-class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
+class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 	/**
 	 * Array of form settings.
@@ -37,7 +37,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	private $_mssql_connection = false;
 
 	/**
-	 * MSSSQL_Data_Connector constructor.
+	 * MSSQL_Data_Connector constructor.
 	 */
 	public function __construct() {
 
@@ -259,7 +259,7 @@ class MSSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 */
 	public static function register_connector() {
 
-		add_filter( 'ufhealth_gf_secure_data_connectors', array( '\UFHealth\Gravity_Forms_Secure_Storage\MSSSQL_Data_Connector', 'filter_ufhealth_gf_secure_data_connectors' ) );
+		add_filter( 'ufhealth_gf_secure_data_connectors', array( 'MSSQL_Data_Connector', 'filter_ufhealth_gf_secure_data_connectors' ) );
 
 	}
 
