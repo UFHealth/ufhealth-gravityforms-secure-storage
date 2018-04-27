@@ -12,7 +12,7 @@ services:
 before_script:
 # Install git, and php libraries the php image doesn't have installed
 - apt-get update -yqq
-- apt-get install git  -yqq
+- apt-get install git wget gnupg -yqq
 # Install composer
 - curl -sS https://getcomposer.org/installer | php
 
@@ -44,7 +44,7 @@ test:7.2:
   image: php:7.2
   script:
     # Install required packages
-    - apt-get install libxml2-dev unzip wget zip unzip subversion mysql-client freetds-bin freetds-dev freetds-common libmcrypt-dev --fix-missing -yqq
+    - apt-get install libxml2-dev unzip zip unzip subversion mysql-client freetds-bin freetds-dev freetds-common libmcrypt-dev --fix-missing -yqq
     # Install PHP libs
     - docker-php-ext-install mysqli pdo_mysql mbstring
     - docker-php-ext-configure pdo_dblib --with-libdir=lib/x86_64-linux-gnu
