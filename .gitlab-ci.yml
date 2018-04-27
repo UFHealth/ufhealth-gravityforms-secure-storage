@@ -12,7 +12,7 @@ services:
 before_script:
 # Install git, the php image doesn't have installed
 - apt-get update -yqq
-- apt-get install git libxml2-dev unzip freetds-bin freetds-dev freetds-common vim wget zip unzip subversion mysql-client libmcrypt-dev --fix-missing -yqq
+- apt-get install git --fix-missing -yqq
 - docker-php-ext-install mysqli pdo_mysql mbstring
 - docker-php-ext-configure pdo_dblib --with-libdir=lib/x86_64-linux-gnu
 - docker-php-ext-install -j$(nproc) pdo_dblib
@@ -44,4 +44,12 @@ test:7.2:
   stage: test
   image: php:7.2
   script:
-  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
+    # Install required packages
+    - apt-get install libxml2-dev unzip freetds-bin freetds-dev freetds-common vim wget zip unzip subversion mysql-client libmcrypt-dev --fix-missing -yqq
+    - docker-php-ext-install mysqli pdo_mysql mbstring
+    - docker-php-ext-configure pdo_dblib --with-libdir=lib/x86_64-linux-gnu
+    - docker-php-ext-install -j$(nproc) pdo_dblib
+    - docker-php-ext-enable mysqli pdo_mysql mbstring pdo_dblib
+    # Install and run unit tests
+    - bash tests/bin/install-wp-tests.sh wordpress_test root mysql mysql $WP_VERSION
+    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
