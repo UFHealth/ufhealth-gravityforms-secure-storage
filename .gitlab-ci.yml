@@ -6,10 +6,13 @@ variables:
   WP_MULTISITE: "0"
   GIT_SSL_NO_VERIFY: 'true'
 
+services:
+- mysql
+
 before_script:
 # Install git, the php image doesn't have installed
 - apt-get update -yqq
-- apt-get install git libxml2-dev unzip freetds-bin freetds-dev freetds-common vim wget zip unzip subversion mysql-client mysql-server libmcrypt-dev --fix-missing -yqq
+- apt-get install git libxml2-dev unzip freetds-bin freetds-dev freetds-common vim wget zip unzip subversion mysql-client libmcrypt-dev --fix-missing -yqq
 - docker-php-ext-install mysqli pdo_mysql mbstring
 - docker-php-ext-configure pdo_dblib --with-libdir=lib/x86_64-linux-gnu
 - docker-php-ext-install -j$(nproc) pdo_dblib
@@ -27,7 +30,7 @@ build_assets:
   image: php:7.2
   script:
     - php composer.phar install
-    - bash tests/bin/install-wp-tests.sh wordpress_test root mysql localhost $WP_VERSION
+    - bash tests/bin/install-wp-tests.sh wordpress_test root mysql mysql $WP_VERSION
   artifacts:
     expire_in: 1 day
     paths:
