@@ -17,7 +17,7 @@ module.exports = function (grunt) {
 					options: {
 						type:        'wp-plugin',
 						domainPath:  '/languages',
-						mainFile:    'ufhealth-gravity-forms-secure-storage.php',
+						mainFile:    'ufhealth-gravityforms-secure-storage.php',
 						potFilename: 'ufhealth-gravity-forms-secure-storage.pot',
 						exclude: ['vendor']
 					}

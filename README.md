@@ -52,6 +52,9 @@ Minified JS and CSS is great in production but it can make development much hard
 
 ## Changelog
 
+##### 1.4
+* Ensure CI is working
+
 ##### 1.3
 * Clean up for code review and code standards
 

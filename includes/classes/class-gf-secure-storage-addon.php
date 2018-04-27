@@ -61,7 +61,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 *
 	 * @var string
 	 */
-	protected $_path = 'ufhealth-gravity-forms-secure-storage/ufhealth-gravity-forms-secure-storage.php';
+	protected $_path = 'ufhealth-gravity-forms-secure-storage/ufhealth-gravityforms-secure-storage.php';
 
 	/**
 	 * The values we need to secure
