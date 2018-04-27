@@ -42,7 +42,7 @@ function perform_uninstall() {
 		exit_uninstaller();
 	}
 
-	// Uninstall Better YOURLs.
+	// Uninstall Gravity Forms Secure Storage.
 	clean_data();
 }
 
