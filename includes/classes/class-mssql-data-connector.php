@@ -322,7 +322,15 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 				\PDO::ATTR_EMULATE_PREPARES   => false,
 			);
 
-			$this->_mssql_connection = new \PDO( $dsn, $user, $pass, $opt );
+			try {
+
+				$this->_mssql_connection = new \PDO( $dsn, $user, $pass, $opt );
+
+			} catch ( \PDOException $e ) {
+
+				return false;
+
+			}
 			// phpcs:enable
 
 		}
