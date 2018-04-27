@@ -65,9 +65,11 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 			$result = $this->_mssql_connection->query( 'SELECT Distinct TABLE_NAME FROM information_schema.TABLES' );
 
+			// phpcs:disable
 			while ( $row = $result->fetch( \PDO::FETCH_NUM ) ) {
 				$table_list[] = $row[0];
 			}
+			// phpcs:enable
 		} catch ( \PDOException $e ) {
 
 			echo esc_html( $e->getMessage() );
@@ -76,10 +78,7 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 		if ( ! in_array( $table_name, $table_list, true ) ) {
 
-			$sql = "CREATE TABLE " . $table_name . " ("
-			       . " ID INT IDENTITY(1,1) PRIMARY KEY"
-			       . ", Submitted DATETIME NOT NULL DEFAULT (GETDATE())"
-			       . ")";
+			$sql = 'CREATE TABLE ' . $table_name . ' ( ID INT IDENTITY(1,1) PRIMARY KEY, Submitted DATETIME NOT NULL DEFAULT (GETDATE()))';
 
 			$this->_mssql_connection->query( $sql );
 
@@ -87,9 +86,13 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 		// Add each field to the table if needed.
 		$fields           = $form_meta['fields'];
-		$column_statement = $this->_mssql_connection->query( "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='" . $table_name . "';" );
-		$raw_columns      = $column_statement->fetchAll( \PDO::FETCH_ASSOC );
-		$columns          = array();
+		$column_statement = $this->_mssql_connection->query( sprintf( 'SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME=\'%s\';', $table_name ) );
+
+		// phpcs:disable
+		$raw_columns = $column_statement->fetchAll( \PDO::FETCH_ASSOC ); // WPCS: db call ok.
+		// phpcs:enable
+
+		$columns = array();
 
 		foreach ( $raw_columns as $column ) {
 			$columns[] = $column['COLUMN_NAME'];
@@ -141,8 +144,9 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 		foreach ( $secure_values as $field => $value ) {
 
-			$columns                                .= $column_names[ $field ] . ', ';
-			$values                                 .= ':' . $column_names[ $field ] . ', ';
+			$columns .= $column_names[ $field ] . ', ';
+			$values  .= ':' . $column_names[ $field ] . ', ';
+
 			$exec_values[ $column_names[ $field ] ] = $value;
 
 		}
@@ -274,7 +278,7 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 */
 	public static function filter_ufhealth_gf_secure_data_connectors( $connectors ) {
 
-		$connectors['mssql'] = new MSSSQL_Data_Connector();
+		$connectors['mssql'] = new static();
 
 		return $connectors;
 
@@ -311,6 +315,7 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 			$charset = 'utf8mb4';
 
 			$dsn = "dblib:host=$host;dbname=$db;charset=$charset";
+			// phpcs:disable
 			$opt = array(
 				\PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
 				\PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
@@ -318,6 +323,7 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 			);
 
 			$this->_mssql_connection = new \PDO( $dsn, $user, $pass, $opt );
+			// phpcs:enable
 
 		}
 
