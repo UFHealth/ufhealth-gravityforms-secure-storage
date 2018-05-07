@@ -1,6 +1,9 @@
 UF Health Gravity Forms Secure Storage
 =============
 
+[![pipeline status](https://gitlab.ahc.ufl.edu/WebServices/WordPress-Plugins/ufhealth-gravityforms-secure-storage/badges/master/pipeline.svg)](https://gitlab.ahc.ufl.edu/WebServices/WordPress-Plugins/ufhealth-gravityforms-secure-storage/commits/master)
+[![coverage report](https://gitlab.ahc.ufl.edu/WebServices/WordPress-Plugins/ufhealth-gravityforms-secure-storage/badges/master/coverage.svg)](https://gitlab.ahc.ufl.edu/WebServices/WordPress-Plugins/ufhealth-gravityforms-secure-storage/commits/master)
+
 Adds a secure storage layer to Gravity Forms to fascilitate our ability to handle various data requirements.
 
 ## Installation and Usage
