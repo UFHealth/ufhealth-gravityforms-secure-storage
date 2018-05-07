@@ -55,6 +55,9 @@ Minified JS and CSS is great in production but it can make development much hard
 
 ## Changelog
 
+##### 1.4.1
+* Complete CI information in readme and verify coverage whitelist in phpunit.xml
+
 ##### 1.4
 * Ensure CI is working
 
