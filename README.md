@@ -1,6 +1,9 @@
 UF Health Gravity Forms Secure Storage
 =============
 
+[![pipeline status](https://gitlab.ahc.ufl.edu/WebServices/WordPress-Plugins/ufhealth-gravityforms-secure-storage/badges/master/pipeline.svg)](https://gitlab.ahc.ufl.edu/WebServices/WordPress-Plugins/ufhealth-gravityforms-secure-storage/commits/master)
+[![coverage report](https://gitlab.ahc.ufl.edu/WebServices/WordPress-Plugins/ufhealth-gravityforms-secure-storage/badges/master/coverage.svg)](https://gitlab.ahc.ufl.edu/WebServices/WordPress-Plugins/ufhealth-gravityforms-secure-storage/commits/master)
+
 Adds a secure storage layer to Gravity Forms to fascilitate our ability to handle various data requirements.
 
 ## Installation and Usage
@@ -51,6 +54,9 @@ By default the Gruntfile only looks at a single JS and SCSS file. If you need to
 Minified JS and CSS is great in production but it can make development much harder. Fortunately Grunt helps us by building oth minified versions as well as development versions of all of our CSS and JS. To best utilize these in your plugin it is recommended to swap between using SCRIPT_DEBUG. Here's a great article to help you utilize this in your plugin: [https://pippinsplugins.com/use-script_debug-enable-non-minified-asset-files/](https://pippinsplugins.com/use-script_debug-enable-non-minified-asset-files/)
 
 ## Changelog
+
+##### 1.4.1
+* Complete CI information in readme and verify coverage whitelist in phpunit.xml
 
 ##### 1.4
 * Ensure CI is working
