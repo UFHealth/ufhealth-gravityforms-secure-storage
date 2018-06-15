@@ -244,6 +244,23 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 			$this->settings = $form_settings;
 
+			// Allow settings to be permanently overridden via defines.
+			if ( defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_HOST' ) ) {
+				$this->settings['secure_database_host'] = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_HOST;
+			}
+
+			if ( defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_NAME' ) ) {
+				$this->settings['secure_database_name'] = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_NAME;
+			}
+
+			if ( defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_USERNAME' ) ) {
+				$this->settings['secure_database_username'] = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_USERNAME;
+			}
+
+			if ( defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_PASSWORD' ) ) {
+				$this->settings['secure_database_password'] = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_PASSWORD;
+			}
+
 			if ( false === $this->_mssql_connection ) {
 				return $this->set_client();
 			}
