@@ -155,7 +155,12 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 */
 	public function action_gform_after_save_form( $form_meta, $is_new ) {
 
-		$settings       = $this->get_form_settings( $form_meta );
+		$settings = $this->get_form_settings( $form_meta );
+
+		if ( defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR' ) ) {
+			$settings['connector'] = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR;
+		}
+
 		$data_connector = $this->_data_connectors[ $settings['connector'] ];
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
@@ -179,7 +184,12 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 */
 	public function action_gform_after_submission( $entry, $form ) {
 
-		$settings       = $this->get_form_settings( $form );
+		$settings = $this->get_form_settings( $form );
+
+		if ( defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR' ) ) {
+			$settings['connector'] = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR;
+		}
+
 		$data_connector = $this->_data_connectors[ $settings['connector'] ];
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
@@ -209,8 +219,13 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		global $wpdb;
 
-		$form           = \GFAPI::get_form( $form_id );
-		$settings       = $this->get_form_settings( $form );
+		$form     = \GFAPI::get_form( $form_id );
+		$settings = $this->get_form_settings( $form );
+
+		if ( defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR' ) ) {
+			$settings['connector'] = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR;
+		}
+
 		$data_connector = $this->_data_connectors[ $settings['connector'] ];
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
@@ -248,7 +263,12 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		$entry = \GFAPI::get_entry( $entry_id );
 		$form  = \GFAPI::get_form( $entry['form_id'] );
 
-		$settings       = $this->get_form_settings( $form );
+		$settings = $this->get_form_settings( $form );
+
+		if ( defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR' ) ) {
+			$settings['connector'] = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR;
+		}
+
 		$data_connector = $this->_data_connectors[ $settings['connector'] ];
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
@@ -324,7 +344,12 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 */
 	public function filter_gform_entry_field_value( $display_value, $field, $lead, $form ) {
 
-		$settings       = $this->get_form_settings( $form );
+		$settings = $this->get_form_settings( $form );
+
+		if ( defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR' ) ) {
+			$settings['connector'] = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR;
+		}
+
 		$data_connector = $this->_data_connectors[ $settings['connector'] ];
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
@@ -374,6 +399,10 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		$form     = \GFAPI::get_form( $field['formId'] );
 		$settings = $this->get_form_settings( $form );
+
+		if ( defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR' ) ) {
+			$settings['connector'] = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR;
+		}
 
 		$data_connector = $this->_data_connectors[ $settings['connector'] ];
 
@@ -443,6 +472,8 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 */
 	public function form_settings_fields( $form ) {
 
+		$core_fields = array();
+
 		// Populate the select box to select the appropriate connector.
 		$connectors = array();
 
@@ -455,25 +486,28 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		}
 
-		// Set up fields common to all connectors.
-		$core_fields = array(
-			array(
+		if ( ! defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR' ) ) {
+
+			$core_fields[] = array(
 				'label'   => esc_html__( 'Select Data Connector', 'ufhealth-gravity-forms-secure-storage' ),
 				'type'    => 'select',
 				'name'    => 'connector',
 				'tooltip' => esc_html__( 'Select the data connector to use with this form.', 'ufhealth-gravity-forms-secure-storage' ),
 				'choices' => $connectors,
-			),
-			array(
-				'label'   => esc_html__( 'Enable Secure Storage', 'ufhealth-gravity-forms-secure-storage' ),
-				'type'    => 'checkbox',
-				'name'    => 'enabled',
-				'tooltip' => esc_html__( 'Enables the secure storage back-end allowing secure storage on this form.', 'ufhealth-gravity-forms-secure-storage' ),
-				'choices' => array(
-					array(
-						'label' => esc_html__( 'Enabled', 'ufhealth-gravity-forms-secure-storage' ),
-						'name'  => 'enabled',
-					),
+			);
+
+		}
+
+		// Set up fields common to all connectors.
+		$core_fields[] = array(
+			'label'   => esc_html__( 'Enable Secure Storage', 'ufhealth-gravity-forms-secure-storage' ),
+			'type'    => 'checkbox',
+			'name'    => 'enabled',
+			'tooltip' => esc_html__( 'Enables the secure storage back-end allowing secure storage on this form.', 'ufhealth-gravity-forms-secure-storage' ),
+			'choices' => array(
+				array(
+					'label' => esc_html__( 'Enabled', 'ufhealth-gravity-forms-secure-storage' ),
+					'name'  => 'enabled',
 				),
 			),
 		);
