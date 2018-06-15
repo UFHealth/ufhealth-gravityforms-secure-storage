@@ -22,7 +22,7 @@ services:
     labels:
       - 'traefik.enable=false'
   phpfpm:
-    image: ufhweb/php:7.2-wordpress
+    image: ufhweb/php:7.2-gfsecure
     depends_on:
       - mariadb
     volumes:
