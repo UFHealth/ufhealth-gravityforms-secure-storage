@@ -173,6 +173,7 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 			$settings_fields[] = array(
 				'label'             => esc_html__( 'Database Host', 'ufhealth-gravity-forms-secure-storage' ),
+				'required'          => true,
 				'type'              => 'text',
 				'name'              => 'secure_database_host',
 				'tooltip'           => esc_html__( 'The host server of the MSSQL Database', 'ufhealth-gravity-forms-secure-storage' ),
@@ -187,6 +188,7 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 			$settings_fields[] = array(
 				'label'             => esc_html__( 'Database Name', 'ufhealth-gravity-forms-secure-storage' ),
+				'required'          => true,
 				'type'              => 'text',
 				'name'              => 'secure_database_name',
 				'tooltip'           => esc_html__( 'The name of the MSSQL Database', 'ufhealth-gravity-forms-secure-storage' ),
@@ -201,6 +203,7 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 			$settings_fields[] = array(
 				'label'             => esc_html__( 'Database Username', 'ufhealth-gravity-forms-secure-storage' ),
+				'required'          => true,
 				'type'              => 'text',
 				'name'              => 'secure_database_username',
 				'tooltip'           => esc_html__( 'The username for the MSSQL Database', 'ufhealth-gravity-forms-secure-storage' ),
@@ -215,6 +218,7 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 			$settings_fields[] = array(
 				'label'             => esc_html__( 'Database Password', 'ufhealth-gravity-forms-secure-storage' ),
+				'required'          => true,
 				'type'              => 'text',
 				'name'              => 'secure_database_password',
 				'tooltip'           => esc_html__( 'The user password for the MSSQL Database', 'ufhealth-gravity-forms-secure-storage' ),
