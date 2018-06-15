@@ -96,6 +96,7 @@ class Tozny_Data_Connector implements GF_Secure_Data_Connector {
 
 			$settings_fields[] = array(
 				'label'             => esc_html__( 'Client ID', 'ufhealth-gravity-forms-secure-storage' ),
+				'required'          => true,
 				'type'              => 'text',
 				'name'              => 'secure_client_id',
 				'tooltip'           => esc_html__( 'Register your client at https://console.tozny.com/clients', 'ufhealth-gravity-forms-secure-storage' ),
@@ -110,6 +111,7 @@ class Tozny_Data_Connector implements GF_Secure_Data_Connector {
 
 			$settings_fields[] = array(
 				'label'             => esc_html__( 'API Key ID', 'ufhealth-gravity-forms-secure-storage' ),
+				'required'          => true,
 				'type'              => 'text',
 				'name'              => 'secure_api_key_id',
 				'tooltip'           => esc_html__( 'Register your client at https://console.tozny.com/clients', 'ufhealth-gravity-forms-secure-storage' ),
@@ -124,6 +126,7 @@ class Tozny_Data_Connector implements GF_Secure_Data_Connector {
 
 			$settings_fields[] = array(
 				'label'             => esc_html__( 'API Secret', 'ufhealth-gravity-forms-secure-storage' ),
+				'required'          => true,
 				'type'              => 'text',
 				'name'              => 'secure_api_secret',
 				'tooltip'           => esc_html__( 'Register your client at https://console.tozny.com/clients', 'ufhealth-gravity-forms-secure-storage' ),
@@ -138,6 +141,7 @@ class Tozny_Data_Connector implements GF_Secure_Data_Connector {
 
 			$settings_fields[] = array(
 				'label'             => esc_html__( 'Public Key', 'ufhealth-gravity-forms-secure-storage' ),
+				'required'          => true,
 				'type'              => 'text',
 				'name'              => 'secure_api_public_key',
 				'tooltip'           => esc_html__( 'Register your client at https://console.tozny.com/clients', 'ufhealth-gravity-forms-secure-storage' ),
@@ -152,6 +156,7 @@ class Tozny_Data_Connector implements GF_Secure_Data_Connector {
 
 			$settings_fields[] = array(
 				'label'             => esc_html__( 'Private Key', 'ufhealth-gravity-forms-secure-storage' ),
+				'required'          => true,
 				'type'              => 'text',
 				'name'              => 'secure_api_private_key',
 				'tooltip'           => esc_html__( 'Register your client at https://console.tozny.com/clients', 'ufhealth-gravity-forms-secure-storage' ),
