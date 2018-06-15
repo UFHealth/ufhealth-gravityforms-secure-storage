@@ -232,6 +232,27 @@ class Tozny_Data_Connector implements GF_Secure_Data_Connector {
 
 			$this->settings = $form_settings;
 
+			// Allow settings to be permanently overridden via defines.
+			if ( defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_CLIENT_ID' ) ) {
+				$this->settings['secure_client_id'] = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_CLIENT_ID;
+			}
+
+			if ( defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_API_KEY_ID' ) ) {
+				$this->settings['secure_api_key_id'] = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_API_KEY_ID;
+			}
+
+			if ( defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_API_SECRET' ) ) {
+				$this->settings['secure_api_secret'] = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_API_SECRET;
+			}
+
+			if ( defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_API_PUBLIC_KEY' ) ) {
+				$this->settings['secure_api_public_key'] = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_API_PUBLIC_KEY;
+			}
+
+			if ( defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_API_PRIVATE_KEY' ) ) {
+				$this->settings['secure_api_private_key'] = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_API_PRIVATE_KEY;
+			}
+
 			if ( false === $this->_inno_client ) {
 				$this->set_client();
 			}
