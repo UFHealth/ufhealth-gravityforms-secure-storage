@@ -89,49 +89,79 @@ class Tozny_Data_Connector implements GF_Secure_Data_Connector {
 	 */
 	public function get_settings_fields() {
 
-		return array(
+		$settings_fields = array();
 
-			array(
+		// Set the secure client id field if needed.
+		if ( ! defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_CLIENT_ID' ) ) {
+
+			$settings_fields[] = array(
 				'label'             => esc_html__( 'Client ID', 'ufhealth-gravity-forms-secure-storage' ),
 				'type'              => 'text',
 				'name'              => 'secure_client_id',
 				'tooltip'           => esc_html__( 'Register your client at https://console.tozny.com/clients', 'ufhealth-gravity-forms-secure-storage' ),
 				'class'             => 'medium',
 				'feedback_callback' => array( $this, 'is_valid_setting' ),
-			),
-			array(
+			);
+
+		}
+
+		// Set the secure api key id if needed.
+		if ( ! defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_API_KEY_ID' ) ) {
+
+			$settings_fields[] = array(
 				'label'             => esc_html__( 'API Key ID', 'ufhealth-gravity-forms-secure-storage' ),
 				'type'              => 'text',
 				'name'              => 'secure_api_key_id',
 				'tooltip'           => esc_html__( 'Register your client at https://console.tozny.com/clients', 'ufhealth-gravity-forms-secure-storage' ),
 				'class'             => 'medium',
 				'feedback_callback' => array( $this, 'is_valid_setting' ),
-			),
-			array(
+			);
+
+		}
+
+		// Set the secure api secret if needed.
+		if ( ! defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_API_SECRET' ) ) {
+
+			$settings_fields[] = array(
 				'label'             => esc_html__( 'API Secret', 'ufhealth-gravity-forms-secure-storage' ),
 				'type'              => 'text',
 				'name'              => 'secure_api_secret',
 				'tooltip'           => esc_html__( 'Register your client at https://console.tozny.com/clients', 'ufhealth-gravity-forms-secure-storage' ),
 				'class'             => 'medium',
 				'feedback_callback' => array( $this, 'is_valid_setting' ),
-			),
-			array(
+			);
+
+		}
+
+		// Set the secure api public key if needed.
+		if ( ! defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_API_PUBLIC_KEY' ) ) {
+
+			$settings_fields[] = array(
 				'label'             => esc_html__( 'Public Key', 'ufhealth-gravity-forms-secure-storage' ),
 				'type'              => 'text',
 				'name'              => 'secure_api_public_key',
 				'tooltip'           => esc_html__( 'Register your client at https://console.tozny.com/clients', 'ufhealth-gravity-forms-secure-storage' ),
 				'class'             => 'medium',
 				'feedback_callback' => array( $this, 'is_valid_setting' ),
-			),
-			array(
+			);
+
+		}
+
+		// Set the secure api private key if needed.
+		if ( ! defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_API_PRIVATE_KEY' ) ) {
+
+			$settings_fields[] = array(
 				'label'             => esc_html__( 'Private Key', 'ufhealth-gravity-forms-secure-storage' ),
 				'type'              => 'text',
 				'name'              => 'secure_api_private_key',
 				'tooltip'           => esc_html__( 'Register your client at https://console.tozny.com/clients', 'ufhealth-gravity-forms-secure-storage' ),
 				'class'             => 'medium',
 				'feedback_callback' => array( $this, 'is_valid_setting' ),
-			),
-		);
+			);
+
+		}
+
+		return $settings_fields;
 
 	}
 
