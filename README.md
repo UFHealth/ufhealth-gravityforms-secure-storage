@@ -53,6 +53,17 @@ By default the Gruntfile only looks at a single JS and SCSS file. If you need to
 
 Minified JS and CSS is great in production but it can make development much harder. Fortunately Grunt helps us by building oth minified versions as well as development versions of all of our CSS and JS. To best utilize these in your plugin it is recommended to swap between using SCRIPT_DEBUG. Here's a great article to help you utilize this in your plugin: [https://pippinsplugins.com/use-script_debug-enable-non-minified-asset-files/](https://pippinsplugins.com/use-script_debug-enable-non-minified-asset-files/)
 
+##### Setting up a local devopment environment
+
+1. Run `composer install`
+2. Run `npm install` 
+3. If Grunt is not available on you system install it with `npm -g install grunt grunt-cli`
+4. Run `grunt`
+4. Clone and bring up [Ouroboros](https://github.com/UFHealth/ouroboros) using the instructions on its page
+5. Bring up this projects Docker configuration with `./develop up`
+6. Run the setup script in `./Docker/bin/setup`
+7. Access the site at http://ufhealth-gravity-forms-secure.test
+
 ## Changelog
 
 ##### 1.4.1
