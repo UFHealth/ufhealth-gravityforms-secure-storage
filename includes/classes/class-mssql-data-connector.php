@@ -166,40 +166,65 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 */
 	public function get_settings_fields() {
 
-		return array(
-			array(
+		$settings_fields = array();
+
+		// Add database host setting.
+		if ( ! defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_HOST' ) ) {
+
+			$settings_fields[] = array(
 				'label'             => esc_html__( 'Database Host', 'ufhealth-gravity-forms-secure-storage' ),
 				'type'              => 'text',
 				'name'              => 'secure_database_host',
 				'tooltip'           => esc_html__( 'The host server of the MSSQL Database', 'ufhealth-gravity-forms-secure-storage' ),
 				'class'             => 'medium',
 				'feedback_callback' => array( $this, 'is_valid_setting' ),
-			),
-			array(
+			);
+
+		}
+
+		// Add database name setting.
+		if ( ! defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_NAME' ) ) {
+
+			$settings_fields[] = array(
 				'label'             => esc_html__( 'Database Name', 'ufhealth-gravity-forms-secure-storage' ),
 				'type'              => 'text',
 				'name'              => 'secure_database_name',
 				'tooltip'           => esc_html__( 'The name of the MSSQL Database', 'ufhealth-gravity-forms-secure-storage' ),
 				'class'             => 'medium',
 				'feedback_callback' => array( $this, 'is_valid_setting' ),
-			),
-			array(
+			);
+
+		}
+
+		// Add database username setting.
+		if ( ! defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_USERNAME' ) ) {
+
+			$settings_fields[] = array(
 				'label'             => esc_html__( 'Database Username', 'ufhealth-gravity-forms-secure-storage' ),
 				'type'              => 'text',
 				'name'              => 'secure_database_username',
 				'tooltip'           => esc_html__( 'The username for the MSSQL Database', 'ufhealth-gravity-forms-secure-storage' ),
 				'class'             => 'medium',
 				'feedback_callback' => array( $this, 'is_valid_setting' ),
-			),
-			array(
+			);
+
+		}
+
+		// Add database password setting.
+		if ( ! defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_PASSWORD' ) ) {
+
+			$settings_fields[] = array(
 				'label'             => esc_html__( 'Database Password', 'ufhealth-gravity-forms-secure-storage' ),
 				'type'              => 'text',
 				'name'              => 'secure_database_password',
 				'tooltip'           => esc_html__( 'The user password for the MSSQL Database', 'ufhealth-gravity-forms-secure-storage' ),
 				'class'             => 'medium',
 				'feedback_callback' => array( $this, 'is_valid_setting' ),
-			),
-		);
+			);
+
+		}
+
+		return $settings_fields;
 
 	}
 
