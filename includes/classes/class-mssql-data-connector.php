@@ -374,6 +374,8 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 			} catch ( \PDOException $e ) {
 
+				wp_die( esc_html__( 'Unable to connect to MSSQL Server with the following error message: ', 'ufhealth-gravity-forms-secure-storage' ) . esc_html( $e->getMessage() ), esc_html__( 'Secure Database Connection Error.', 'ufhealth-gravity-forms-secure-storage' ) );
+
 				return false;
 
 			}
