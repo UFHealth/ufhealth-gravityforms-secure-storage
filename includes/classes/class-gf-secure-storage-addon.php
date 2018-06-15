@@ -375,6 +375,10 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		$form     = \GFAPI::get_form( $field['formId'] );
 		$settings = $this->get_form_settings( $form );
 
+		if ( defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR' ) ) {
+			$settings['connector'] = UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR;
+		}
+
 		$data_connector = $this->_data_connectors[ $settings['connector'] ];
 
 		if ( isset( $settings['enabled'] ) && '1' === $settings['enabled'] ) {
