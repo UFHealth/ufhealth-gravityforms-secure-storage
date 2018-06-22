@@ -124,7 +124,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		MSSQL_Data_Connector::register_connector();
 
 		/**
-		 * Registers the available backends
+		 * Registers the available back-ends
 		 *
 		 * @since 1.1
 		 *
