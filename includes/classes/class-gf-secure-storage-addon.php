@@ -397,6 +397,15 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 */
 	public function filter_gform_get_field_value( $value, $lead, $field ) {
 
+		if (
+			is_multisite() &&
+			defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_REQUIRE_SUPER_ADMIN' ) &&
+			true === UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_REQUIRE_SUPER_ADMIN &&
+			! current_user_can( 'manage_network' )
+		) {
+			return $value;
+		}
+
 		$form     = \GFAPI::get_form( $field['formId'] );
 		$settings = $this->get_form_settings( $form );
 
