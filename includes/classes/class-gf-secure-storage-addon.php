@@ -472,62 +472,80 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 */
 	public function form_settings_fields( $form ) {
 
-		$core_fields = array();
+		if (
+			is_multisite() &&
+			defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_REQUIRE_SUPER_ADMIN' ) &&
+			true === UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_REQUIRE_SUPER_ADMIN &&
+			! current_user_can( 'manage_network' )
+		) {
 
-		// Populate the select box to select the appropriate connector.
-		$connectors = array();
-
-		foreach ( $this->_data_connectors as $id => $connector ) {
-
-			$connectors[] = array(
-				'value' => $id,
-				'label' => $connector->get_label(),
-			);
-
-		}
-
-		if ( ! defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR' ) ) {
-
-			$core_fields[] = array(
-				'label'   => esc_html__( 'Select Data Connector', 'ufhealth-gravity-forms-secure-storage' ),
-				'type'    => 'select',
-				'name'    => 'connector',
-				'tooltip' => esc_html__( 'Select the data connector to use with this form.', 'ufhealth-gravity-forms-secure-storage' ),
-				'choices' => $connectors,
-			);
-
-		}
-
-		// Set up fields common to all connectors.
-		$core_fields[] = array(
-			'label'   => esc_html__( 'Enable Secure Storage', 'ufhealth-gravity-forms-secure-storage' ),
-			'type'    => 'checkbox',
-			'name'    => 'enabled',
-			'tooltip' => esc_html__( 'Enables the secure storage back-end allowing secure storage on this form.', 'ufhealth-gravity-forms-secure-storage' ),
-			'choices' => array(
+			$settings = array(
 				array(
-					'label' => esc_html__( 'Enabled', 'ufhealth-gravity-forms-secure-storage' ),
-					'name'  => 'enabled',
+					'title'  => esc_html__( 'Settings can only be edited by a network administrator.', 'ufhealth-gravity-forms-secure-storage' ),
+					'fields' => array(),
 				),
-			),
-		);
+			);
 
-		// Get any fields specific to the connector.
-		$connector_fields = array();
-		$current_settings = $this->get_form_settings( $form );
+		} else {
 
-		if ( is_array( $current_settings ) && isset( $current_settings['connector'] ) ) {
-			$connector_fields = $this->_data_connectors[ $current_settings['connector'] ]->get_settings_fields();
+			$core_fields = array();
+
+			// Populate the select box to select the appropriate connector.
+			$connectors = array();
+
+			foreach ( $this->_data_connectors as $id => $connector ) {
+
+				$connectors[] = array(
+					'value' => $id,
+					'label' => $connector->get_label(),
+				);
+
+			}
+
+			if ( ! defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR' ) ) {
+
+				$core_fields[] = array(
+					'label'   => esc_html__( 'Select Data Connector', 'ufhealth-gravity-forms-secure-storage' ),
+					'type'    => 'select',
+					'name'    => 'connector',
+					'tooltip' => esc_html__( 'Select the data connector to use with this form.', 'ufhealth-gravity-forms-secure-storage' ),
+					'choices' => $connectors,
+				);
+
+			}
+
+			// Set up fields common to all connectors.
+			$core_fields[] = array(
+				'label'   => esc_html__( 'Enable Secure Storage', 'ufhealth-gravity-forms-secure-storage' ),
+				'type'    => 'checkbox',
+				'name'    => 'enabled',
+				'tooltip' => esc_html__( 'Enables the secure storage back-end allowing secure storage on this form.', 'ufhealth-gravity-forms-secure-storage' ),
+				'choices' => array(
+					array(
+						'label' => esc_html__( 'Enabled', 'ufhealth-gravity-forms-secure-storage' ),
+						'name'  => 'enabled',
+					),
+				),
+			);
+
+			// Get any fields specific to the connector.
+			$connector_fields = array();
+			$current_settings = $this->get_form_settings( $form );
+
+			if ( is_array( $current_settings ) && isset( $current_settings['connector'] ) ) {
+				$connector_fields = $this->_data_connectors[ $current_settings['connector'] ]->get_settings_fields();
+			}
+
+			$fields = array_merge( $core_fields, $connector_fields );
+
+			$settings = array(
+				array(
+					'title'  => esc_html__( 'Secure Storage Settings', 'ufhealth-gravity-forms-secure-storage' ),
+					'fields' => $fields,
+				),
+			);
+
 		}
-
-		$fields = array_merge( $core_fields, $connector_fields );
-
-		$settings = array(
-			array(
-				'title'  => esc_html__( 'Secure Storage Settings', 'ufhealth-gravity-forms-secure-storage' ),
-				'fields' => $fields,
-			),
-		);
 
 		return $settings;
 
