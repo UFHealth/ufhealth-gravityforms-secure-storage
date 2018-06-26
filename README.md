@@ -66,6 +66,9 @@ Minified JS and CSS is great in production but it can make development much hard
 
 ## Changelog
 
+##### 1.6
+* Added ability to define settings in wp-config (or elsewhere) as well as ability to limit settings to super-admins in a multisite network.
+
 ##### 1.5
 * Added Docker information for easier local development.
 * Allows for all confirguation information to be stored in a file outside of the database for better protection of the credentials.
