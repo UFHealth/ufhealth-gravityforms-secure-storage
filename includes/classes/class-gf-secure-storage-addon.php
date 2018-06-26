@@ -567,12 +567,30 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		$fields = array_merge( $core_fields, $connector_fields );
 
+		$settings_info = array(
+			'title'  => esc_html__( 'Secure Storage Settings', 'ufhealth-gravityforms-secure-storage' ),
+			'fields' => $fields,
+		);
+
+		if ( true === $hidden_field ) {
+
+			/**
+			 * Filter ufhealth_gf_secure_no_access_text
+			 *
+			 * Allows the filtering of the no-access text if needed.
+			 *
+			 * @since 1.6
+			 *
+			 * @param string $no_access_text The text to display if no access is allowed.
+			 */
+			$no_access_text = wp_kses_post( apply_filters( 'ufhealth_gf_secure_no_access_text', __( 'To update security settings on this form please contact the network administrator.', 'ufhealth-gravityforms-secure-storage' ) ) );
+
+			$settings_info['description'] = $no_access_text;
+
+		}
+
 		$settings = array(
-			array(
-				'title'       => esc_html__( 'Secure Storage Settings', 'ufhealth-gravityforms-secure-storage' ),
-				'description' => esc_html__( 'Use the below settings to enable secure storage for this form and configure the storage location (if needed).', 'ufhealth-gravityforms-secure-storage' ),
-				'fields'      => $fields,
-			),
+			$settings_info,
 		);
 
 		return $settings;
