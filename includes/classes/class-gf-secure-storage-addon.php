@@ -477,7 +477,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 *
 	 * @return bool
 	 */
-	public function check_field_permissions() {
+	public static function check_field_permissions() {
 
 		if (
 			is_multisite() &&
@@ -555,6 +555,14 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 		if ( is_array( $current_settings ) && isset( $current_settings['connector'] ) ) {
 			$connector_fields = $this->_data_connectors[ $current_settings['connector'] ]->get_settings_fields();
+		}
+
+		// Apply field hidden rules to connector fields as appropriate.
+		foreach ( $connector_fields as $index => $field ) {
+
+			$field['hidden']            = $hidden_field;
+			$connector_fields[ $index ] = $field;
+
 		}
 
 		$fields = array_merge( $core_fields, $connector_fields );
