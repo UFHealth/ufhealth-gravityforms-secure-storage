@@ -470,6 +470,13 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 	}
 
+	/**
+	 * Determines if the fields should be displayed or not.
+	 *
+	 * @since 1.6
+	 *
+	 * @return bool
+	 */
 	public function check_field_permissions() {
 
 		if (
@@ -479,11 +486,11 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 			! current_user_can( 'manage_network' )
 		) {
 
-			return false;
+			return true;
 
 		}
 
-		return true;
+		return false;
 
 	}
 
@@ -497,6 +504,8 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 * @return array
 	 */
 	public function form_settings_fields( $form ) {
+
+		$hidden_field = $this->check_field_permissions();
 
 		$core_fields = array();
 
@@ -520,6 +529,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 				'name'    => 'connector',
 				'tooltip' => esc_html__( 'Select the data connector to use with this form.', 'ufhealth-gravityforms-secure-storage' ),
 				'choices' => $connectors,
+				'hidden'  => $hidden_field,
 			);
 
 		}
@@ -536,6 +546,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 					'name'  => 'enabled',
 				),
 			),
+			'hidden'  => $hidden_field,
 		);
 
 		// Get any fields specific to the connector.
