@@ -15,45 +15,8 @@ In order to improve efficiency processed files such as minified JS, CSS and .pot
 3. Run ```composer install```
 4. Run ```npm install```
 5. Run ```grunt```
-6. Map or copy the plugin folder to your WordPress plugins folder to activate like a regular plugin.
 
-*Note: you might have to install Grunt globally first with ```npm -g install grunt```*
-
-## Recommended Developer Workflow
-
-1. Commit the initial plugin scaffolding to the *master* branch in a new repository
-2. Branch to develop to work
-3. Merge back to master and tag with the plugin version for release
-
-##### Anatomy of the plugin scaffold
-
-- assets - Asset files including CSS, JS, images, etc
-- assets/css - Holds processed CSS files
-- assets/css/scss - Holds the SCSS files for editing and processing. All your editing of CSS/SCSS files should be in this folder.
-- assets/js - Holds the processed JS files
-- assets/js/src - Hold the JavaScript source files to be processed. All your editing of JavaScript files should be in this folder.
-- includes - All PHP functionality should go in here
-- tests - Holds all PhpUnit tests
-
-##### Anatomy of the Grunt file
-
-The Grunt process performs the following y default
-
-1. Runs unit tests with PhpUnit
-2. Runs jshint to link all JavaScript source files (WP-enforcer checks PHP on commit)
-3. Minifies all JS source files
-4. Processes SASS files to un-minified CSS
-5. Auto-prefixes the processed CSS files
-6. Creates minified versions of the CSS files
-7. Creates a .pot file with all translatable strings from PHP
-
-By default the Gruntfile only looks at a single JS and SCSS file. If you need to add more simply modify the Gruntfile to add additional files for processing.
-
-##### Using minified CSS and JS in your plugin
-
-Minified JS and CSS is great in production but it can make development much harder. Fortunately Grunt helps us by building oth minified versions as well as development versions of all of our CSS and JS. To best utilize these in your plugin it is recommended to swap between using SCRIPT_DEBUG. Here's a great article to help you utilize this in your plugin: [https://pippinsplugins.com/use-script_debug-enable-non-minified-asset-files/](https://pippinsplugins.com/use-script_debug-enable-non-minified-asset-files/)
-
-##### Setting up a local devopment environment
+## Setting up a local devopment environment
 
 1. Run `composer install`
 2. Run `npm install` 
@@ -63,6 +26,38 @@ Minified JS and CSS is great in production but it can make development much hard
 5. Bring up this projects Docker configuration with `./develop up`
 6. Run the setup script in `./Docker/bin/setup`
 7. Access the site at http://ufhealthgravity-forms-secure-storage.test
+
+*Note: you might have to install Grunt globally first with ```npm -g install grunt```*
+
+## Recommended Developer Workflow
+
+1. Commit the initial plugin scaffolding to the *master* branch in a new repository
+2. Branch to develop to work
+3. Merge back to master and tag with the plugin version for release
+
+## Configuration constants available:
+
+1. *UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR* - An integer defining the connector to use.
+2. *UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_REQUIRE_SUPER_ADMIN* - in multisite this restricts changing any security settings on a form to a network administrator.
+
+### MS SQL configuration constants
+1. *UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_HOST* - MSSQL database host.
+2. *UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_NAME* - MSSQL database name.
+3. *UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_USERNAME* - MSSQL database username.
+4. *UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_PASSWORD* - MSSQL database password.
+
+### Innovault configuration constants
+1. *UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_CLIENT_ID* - Innovault secure client id.
+2. *UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_API_KEY_ID* - Innovault app key id.
+3. *UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_API_SECRET* - Innovault api secret.
+4. *UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_API_PUBLIC_KEY* - Innovault api public key
+5. *UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_API_PRIVATE_KEY* - Innovault api private key
+1. *UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_CLIENT_ID* - Innovault 
+
+## Available filters
+
+1. *ufhealth_gf_secure_data_connectors* _array_ Filters the array of available data connectors (allowing you to add your own).
+2. *ufhealth_gf_secure_no_access_text* _string_ filter the display text when a user doesn't have access to the settings. 
 
 ## Changelog
 
