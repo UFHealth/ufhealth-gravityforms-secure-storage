@@ -477,7 +477,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 *
 	 * @return bool
 	 */
-	public static function check_field_permissions() {
+	public function check_field_permissions() {
 
 		if (
 			is_multisite() &&
