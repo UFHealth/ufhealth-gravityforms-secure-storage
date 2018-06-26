@@ -61,7 +61,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 *
 	 * @var string
 	 */
-	protected $_path = 'ufhealth-gravity-forms-secure-storage/ufhealth-gravityforms-secure-storage.php';
+	protected $_path = 'ufhealth-gravityforms-secure-storage/ufhealth-gravityforms-secure-storage.php';
 
 	/**
 	 * The values we need to secure
@@ -88,7 +88,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 *
 	 * @var string
 	 */
-	protected $_slug = 'ufhealth-gravity-forms-secure-storage';
+	protected $_slug = 'ufhealth-gravityforms-secure-storage';
 
 	/**
 	 * Title of the plugin to be used on the settings page, form settings and plugins page. Example: 'Gravity Forms MailChimp Add-On'
@@ -124,7 +124,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		MSSQL_Data_Connector::register_connector();
 
 		/**
-		 * Registers the available backends
+		 * Registers the available back-ends
 		 *
 		 * @since 1.1
 		 *
@@ -397,6 +397,15 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 */
 	public function filter_gform_get_field_value( $value, $lead, $field ) {
 
+		if (
+			is_multisite() &&
+			defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_REQUIRE_SUPER_ADMIN' ) &&
+			true === UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_REQUIRE_SUPER_ADMIN &&
+			! current_user_can( 'manage_network' )
+		) {
+			return $value;
+		}
+
 		$form     = \GFAPI::get_form( $field['formId'] );
 		$settings = $this->get_form_settings( $form );
 
@@ -462,6 +471,30 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	}
 
 	/**
+	 * Determines if the fields should be displayed or not.
+	 *
+	 * @since 1.6
+	 *
+	 * @return bool
+	 */
+	public function check_field_permissions() {
+
+		if (
+			is_multisite() &&
+			defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_REQUIRE_SUPER_ADMIN' ) &&
+			true === UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_REQUIRE_SUPER_ADMIN &&
+			! current_user_can( 'manage_network' )
+		) {
+
+			return true;
+
+		}
+
+		return false;
+
+	}
+
+	/**
 	 * Configures the settings which should be rendered on the Form Settings
 	 *
 	 * @since 1.0
@@ -471,6 +504,8 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 * @return array
 	 */
 	public function form_settings_fields( $form ) {
+
+		$hidden_field = $this->check_field_permissions();
 
 		$core_fields = array();
 
@@ -489,27 +524,29 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 		if ( ! defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR' ) ) {
 
 			$core_fields[] = array(
-				'label'   => esc_html__( 'Select Data Connector', 'ufhealth-gravity-forms-secure-storage' ),
+				'label'   => esc_html__( 'Select Data Connector', 'ufhealth-gravityforms-secure-storage' ),
 				'type'    => 'select',
 				'name'    => 'connector',
-				'tooltip' => esc_html__( 'Select the data connector to use with this form.', 'ufhealth-gravity-forms-secure-storage' ),
+				'tooltip' => esc_html__( 'Select the data connector to use with this form.', 'ufhealth-gravityforms-secure-storage' ),
 				'choices' => $connectors,
+				'hidden'  => $hidden_field,
 			);
 
 		}
 
 		// Set up fields common to all connectors.
 		$core_fields[] = array(
-			'label'   => esc_html__( 'Enable Secure Storage', 'ufhealth-gravity-forms-secure-storage' ),
+			'label'   => esc_html__( 'Enable Secure Storage', 'ufhealth-gravityforms-secure-storage' ),
 			'type'    => 'checkbox',
 			'name'    => 'enabled',
-			'tooltip' => esc_html__( 'Enables the secure storage back-end allowing secure storage on this form.', 'ufhealth-gravity-forms-secure-storage' ),
+			'tooltip' => esc_html__( 'Enables the secure storage back-end allowing secure storage on this form.', 'ufhealth-gravityforms-secure-storage' ),
 			'choices' => array(
 				array(
-					'label' => esc_html__( 'Enabled', 'ufhealth-gravity-forms-secure-storage' ),
+					'label' => esc_html__( 'Enabled', 'ufhealth-gravityforms-secure-storage' ),
 					'name'  => 'enabled',
 				),
 			),
+			'hidden'  => $hidden_field,
 		);
 
 		// Get any fields specific to the connector.
@@ -520,13 +557,40 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 			$connector_fields = $this->_data_connectors[ $current_settings['connector'] ]->get_settings_fields();
 		}
 
+		// Apply field hidden rules to connector fields as appropriate.
+		foreach ( $connector_fields as $index => $field ) {
+
+			$field['hidden']            = $hidden_field;
+			$connector_fields[ $index ] = $field;
+
+		}
+
 		$fields = array_merge( $core_fields, $connector_fields );
 
+		$settings_info = array(
+			'title'  => esc_html__( 'Secure Storage Settings', 'ufhealth-gravityforms-secure-storage' ),
+			'fields' => $fields,
+		);
+
+		if ( true === $hidden_field ) {
+
+			/**
+			 * Filter ufhealth_gf_secure_no_access_text
+			 *
+			 * Allows the filtering of the no-access text if needed.
+			 *
+			 * @since 1.6
+			 *
+			 * @param string $no_access_text The text to display if no access is allowed.
+			 */
+			$no_access_text = wp_kses_post( apply_filters( 'ufhealth_gf_secure_no_access_text', __( 'To update security settings on this form please contact the network administrator.', 'ufhealth-gravityforms-secure-storage' ) ) );
+
+			$settings_info['description'] = $no_access_text;
+
+		}
+
 		$settings = array(
-			array(
-				'title'  => esc_html__( 'Secure Storage Settings', 'ufhealth-gravity-forms-secure-storage' ),
-				'fields' => $fields,
-			),
+			$settings_info,
 		);
 
 		return $settings;

@@ -201,9 +201,12 @@ assets/css/*.map
 assets/js/*.js
 assets/js/*.map
 
-# Docker Stuff
-Docker
-!/Docker/bin/
+# Docker files
+Docker/database
+Docker/wordpress
+Docker/logs
+Docker/debug
+!Docker/bin
 
 # Unit tests
 !/tests/bin/

@@ -172,11 +172,11 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 		if ( ! defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_HOST' ) ) {
 
 			$settings_fields[] = array(
-				'label'             => esc_html__( 'Database Host', 'ufhealth-gravity-forms-secure-storage' ),
+				'label'             => esc_html__( 'Database Host', 'ufhealth-gravityforms-secure-storage' ),
 				'required'          => true,
 				'type'              => 'text',
 				'name'              => 'secure_database_host',
-				'tooltip'           => esc_html__( 'The host server of the MSSQL Database', 'ufhealth-gravity-forms-secure-storage' ),
+				'tooltip'           => esc_html__( 'The host server of the MSSQL Database', 'ufhealth-gravityforms-secure-storage' ),
 				'class'             => 'medium',
 				'feedback_callback' => array( $this, 'is_valid_setting' ),
 			);
@@ -187,11 +187,11 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 		if ( ! defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_NAME' ) ) {
 
 			$settings_fields[] = array(
-				'label'             => esc_html__( 'Database Name', 'ufhealth-gravity-forms-secure-storage' ),
+				'label'             => esc_html__( 'Database Name', 'ufhealth-gravityforms-secure-storage' ),
 				'required'          => true,
 				'type'              => 'text',
 				'name'              => 'secure_database_name',
-				'tooltip'           => esc_html__( 'The name of the MSSQL Database', 'ufhealth-gravity-forms-secure-storage' ),
+				'tooltip'           => esc_html__( 'The name of the MSSQL Database', 'ufhealth-gravityforms-secure-storage' ),
 				'class'             => 'medium',
 				'feedback_callback' => array( $this, 'is_valid_setting' ),
 			);
@@ -202,11 +202,11 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 		if ( ! defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_USERNAME' ) ) {
 
 			$settings_fields[] = array(
-				'label'             => esc_html__( 'Database Username', 'ufhealth-gravity-forms-secure-storage' ),
+				'label'             => esc_html__( 'Database Username', 'ufhealth-gravityforms-secure-storage' ),
 				'required'          => true,
 				'type'              => 'text',
 				'name'              => 'secure_database_username',
-				'tooltip'           => esc_html__( 'The username for the MSSQL Database', 'ufhealth-gravity-forms-secure-storage' ),
+				'tooltip'           => esc_html__( 'The username for the MSSQL Database', 'ufhealth-gravityforms-secure-storage' ),
 				'class'             => 'medium',
 				'feedback_callback' => array( $this, 'is_valid_setting' ),
 			);
@@ -217,11 +217,11 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 		if ( ! defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_SECURE_DATABASE_PASSWORD' ) ) {
 
 			$settings_fields[] = array(
-				'label'             => esc_html__( 'Database Password', 'ufhealth-gravity-forms-secure-storage' ),
+				'label'             => esc_html__( 'Database Password', 'ufhealth-gravityforms-secure-storage' ),
 				'required'          => true,
 				'type'              => 'text',
 				'name'              => 'secure_database_password',
-				'tooltip'           => esc_html__( 'The user password for the MSSQL Database', 'ufhealth-gravity-forms-secure-storage' ),
+				'tooltip'           => esc_html__( 'The user password for the MSSQL Database', 'ufhealth-gravityforms-secure-storage' ),
 				'class'             => 'medium',
 				'feedback_callback' => array( $this, 'is_valid_setting' ),
 			);
@@ -339,7 +339,7 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 	 */
 	public function get_label() {
 
-		return esc_html__( 'MS SQL Database', 'ufhealth-gravity-forms-secure-storage' );
+		return esc_html__( 'MS SQL Database', 'ufhealth-gravityforms-secure-storage' );
 
 	}
 
@@ -374,7 +374,7 @@ class MSSQL_Data_Connector implements GF_Secure_Data_Connector {
 
 			} catch ( \PDOException $e ) {
 
-				wp_die( esc_html__( 'Unable to connect to MSSQL Server with the following error message: ', 'ufhealth-gravity-forms-secure-storage' ) . esc_html( $e->getMessage() ), esc_html__( 'Secure Database Connection Error.', 'ufhealth-gravity-forms-secure-storage' ) );
+				wp_die( esc_html__( 'Unable to connect to MSSQL Server with the following error message: ', 'ufhealth-gravityforms-secure-storage' ) . esc_html( $e->getMessage() ), esc_html__( 'Secure Database Connection Error.', 'ufhealth-gravityforms-secure-storage' ) );
 
 				return false;
 
