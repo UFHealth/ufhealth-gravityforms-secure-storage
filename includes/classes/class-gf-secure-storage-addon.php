@@ -490,8 +490,9 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			$settings = array(
 				array(
-					'title'  => esc_html__( 'Settings can only be edited by a network administrator.', 'ufhealth-gravityforms-secure-storage' ),
-					'fields' => array(),
+					'title'       => esc_html__( 'Settings can only be edited by a network administrator.', 'ufhealth-gravityforms-secure-storage' ),
+					'description' => esc_html__( 'Use the below settings to enable secure storage for this form and configure the storage location (if needed).', 'ufhealth-gravityforms-secure-storage' ),
+					'fields'      => array(),
 				),
 			);
 
@@ -549,8 +550,9 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			$settings = array(
 				array(
-					'title'  => esc_html__( 'Secure Storage Settings', 'ufhealth-gravityforms-secure-storage' ),
-					'fields' => $fields,
+					'title'       => esc_html__( 'Secure Storage Settings', 'ufhealth-gravityforms-secure-storage' ),
+					'description' => esc_html__( 'Use the below settings to enable secure storage for this form and configure the storage location (if needed).', 'ufhealth-gravityforms-secure-storage' ),
+					'fields'      => $fields,
 				),
 			);
 
