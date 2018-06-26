@@ -3,7 +3,7 @@
  * Plugin Name: UF Health Gravity Forms Secure Storage
  * Plugin URI: http://webservices.ufhealth.org/
  * Description: Adds a secure storage layer to Gravity Forms to fascilitate our ability to handle various data requirements.
- * Version: 1.5
+ * Version: 1.6
  * Text Domain: ufhealth-gravityforms-secure-storage
  * Domain Path: /languages
  * Author: UF Health
@@ -13,7 +13,7 @@
  * @package UFHealth\gravity_forms_secure_storage
  */
 
-define( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_VERSION', '1.5' );
+define( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_VERSION', '1.6' );
 define( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_URL', plugin_dir_url( __FILE__ ) );
 define( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_INCLUDES', trailingslashit( plugin_dir_path( __FILE__ ) ) . 'includes/' );
 
