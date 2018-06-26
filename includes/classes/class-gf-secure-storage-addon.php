@@ -61,7 +61,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 *
 	 * @var string
 	 */
-	protected $_path = 'ufhealth-gravity-forms-secure-storage/ufhealth-gravityforms-secure-storage.php';
+	protected $_path = 'ufhealth-gravityforms-secure-storage/ufhealth-gravityforms-secure-storage.php';
 
 	/**
 	 * The values we need to secure
@@ -88,7 +88,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 	 *
 	 * @var string
 	 */
-	protected $_slug = 'ufhealth-gravity-forms-secure-storage';
+	protected $_slug = 'ufhealth-gravityforms-secure-storage';
 
 	/**
 	 * Title of the plugin to be used on the settings page, form settings and plugins page. Example: 'Gravity Forms MailChimp Add-On'
@@ -490,7 +490,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			$settings = array(
 				array(
-					'title'  => esc_html__( 'Settings can only be edited by a network administrator.', 'ufhealth-gravity-forms-secure-storage' ),
+					'title'  => esc_html__( 'Settings can only be edited by a network administrator.', 'ufhealth-gravityforms-secure-storage' ),
 					'fields' => array(),
 				),
 			);
@@ -514,10 +514,10 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 			if ( ! defined( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_CONNECTOR' ) ) {
 
 				$core_fields[] = array(
-					'label'   => esc_html__( 'Select Data Connector', 'ufhealth-gravity-forms-secure-storage' ),
+					'label'   => esc_html__( 'Select Data Connector', 'ufhealth-gravityforms-secure-storage' ),
 					'type'    => 'select',
 					'name'    => 'connector',
-					'tooltip' => esc_html__( 'Select the data connector to use with this form.', 'ufhealth-gravity-forms-secure-storage' ),
+					'tooltip' => esc_html__( 'Select the data connector to use with this form.', 'ufhealth-gravityforms-secure-storage' ),
 					'choices' => $connectors,
 				);
 
@@ -525,13 +525,13 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			// Set up fields common to all connectors.
 			$core_fields[] = array(
-				'label'   => esc_html__( 'Enable Secure Storage', 'ufhealth-gravity-forms-secure-storage' ),
+				'label'   => esc_html__( 'Enable Secure Storage', 'ufhealth-gravityforms-secure-storage' ),
 				'type'    => 'checkbox',
 				'name'    => 'enabled',
-				'tooltip' => esc_html__( 'Enables the secure storage back-end allowing secure storage on this form.', 'ufhealth-gravity-forms-secure-storage' ),
+				'tooltip' => esc_html__( 'Enables the secure storage back-end allowing secure storage on this form.', 'ufhealth-gravityforms-secure-storage' ),
 				'choices' => array(
 					array(
-						'label' => esc_html__( 'Enabled', 'ufhealth-gravity-forms-secure-storage' ),
+						'label' => esc_html__( 'Enabled', 'ufhealth-gravityforms-secure-storage' ),
 						'name'  => 'enabled',
 					),
 				),
@@ -549,7 +549,7 @@ class GF_Secure_Storage_Addon extends \GFAddOn {
 
 			$settings = array(
 				array(
-					'title'  => esc_html__( 'Secure Storage Settings', 'ufhealth-gravity-forms-secure-storage' ),
+					'title'  => esc_html__( 'Secure Storage Settings', 'ufhealth-gravityforms-secure-storage' ),
 					'fields' => $fields,
 				),
 			);

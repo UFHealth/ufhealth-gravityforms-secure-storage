@@ -4,7 +4,7 @@
  * Plugin URI: http://webservices.ufhealth.org/
  * Description: Adds a secure storage layer to Gravity Forms to fascilitate our ability to handle various data requirements.
  * Version: 1.5
- * Text Domain: ufhealth-gravity-forms-secure-storage
+ * Text Domain: ufhealth-gravityforms-secure-storage
  * Domain Path: /languages
  * Author: UF Health
  * Author URI: http://webservices.ufhealth.org/
@@ -20,19 +20,19 @@ define( 'UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_INCLUDES', trailingslashit( plugi
 require trailingslashit( plugin_dir_path( __FILE__ ) ) . 'vendor/autoload.php';
 require UFHEALTH_GRAVITY_FORMS_SECURE_STORAGE_INCLUDES . '/interfaces/interface-gf-secure-data-connector.php';
 
-add_action( 'plugins_loaded', 'ufhealth_gravity_forms_secure_storage_loader' );
+add_action( 'plugins_loaded', 'ufhealth_gravityforms_secure_storage_loader' );
 
 /**
  * Load plugin functionality.
  */
-function ufhealth_gravity_forms_secure_storage_loader() {
+function ufhealth_gravityforms_secure_storage_loader() {
 
 	// Remember the text domain.
-	load_plugin_textdomain( 'ufhealth-gravity-forms-secure-storage', false, dirname( dirname( __FILE__ ) ) . '/languages' );
+	load_plugin_textdomain( 'ufhealth-gravityforms-secure-storage', false, dirname( dirname( __FILE__ ) ) . '/languages' );
 
 }
 
-add_action( 'gform_loaded', 'ufhealth_gravity_forms_secure_storage_gf_loader', 5 );
+add_action( 'gform_loaded', 'ufhealth_gravityforms_secure_storage_gf_loader', 5 );
 
 /**
  * Action gform_loaded
@@ -41,7 +41,7 @@ add_action( 'gform_loaded', 'ufhealth_gravity_forms_secure_storage_gf_loader', 5
  *
  * @since 1.0
  */
-function ufhealth_gravity_forms_secure_storage_gf_loader() {
+function ufhealth_gravityforms_secure_storage_gf_loader() {
 
 	if ( ! method_exists( 'GFForms', 'include_addon_framework' ) ) {
 		return;

@@ -62,7 +62,7 @@ Minified JS and CSS is great in production but it can make development much hard
 4. Clone and bring up [Ouroboros](https://github.com/UFHealth/ouroboros) using the instructions on its page
 5. Bring up this projects Docker configuration with `./develop up`
 6. Run the setup script in `./Docker/bin/setup`
-7. Access the site at http://ufhealth-gravity-forms-secure-storage.test
+7. Access the site at http://ufhealthgravity-forms-secure-storage.test
 
 ## Changelog
 
